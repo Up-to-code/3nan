@@ -33,20 +33,49 @@ bun run start
 2. **Performance:** Prefer FlashList for long lists; use Zustand selectors; see `.cursor/rules/performance.mdc`
 3. **Env:** Copy `.env.example` to `.env.local` if needed; never commit secrets
 
-## Push to GitHub
+## First push to GitHub
 
-If you created a new repo on GitHub:
+Configuration for pushing this repo to GitHub for the first time.
+
+### 1. Create the repository on GitHub first
+
+**You must create the repo before pushing.** Otherwise you get `Repository not found`.
+
+- Go to [github.com/new](https://github.com/new)
+- **Repository name:** `3nan` (must match the remote URL below)
+- **Visibility:** Public or Private
+- Do **not** add a README, .gitignore, or license (this repo already has them)
+- Click **Create repository**
+- Then run the push commands in step 2
+
+### 2. Add remote and push
+
+If `origin` is already set (you saw "remote origin already exists"), skip `git remote add` and run only `git push -u origin main` after creating the repo in step 1.
+
+From the project root (repo: [Up-to-code/3nan](https://github.com/Up-to-code/3nan)):
+
+**HTTPS:**
 
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git remote add origin https://github.com/Up-to-code/3nan.git
+git branch -M main
 git push -u origin main
 ```
 
-Or with SSH:
+**SSH:**
 
 ```bash
-git remote add origin git@github.com:YOUR_USERNAME/YOUR_REPO.git
+git remote add origin git@github.com:Up-to-code/3nan.git
+git branch -M main
 git push -u origin main
 ```
 
-Replace `YOUR_USERNAME` and `YOUR_REPO` with your GitHub username and repository name.
+### 3. If you already added a remote
+
+To point `origin` at this repo:
+
+```bash
+git remote remove origin
+git remote add origin https://github.com/Up-to-code/3nan.git
+git push -u origin main
+```
