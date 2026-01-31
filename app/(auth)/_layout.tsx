@@ -6,6 +6,9 @@ export default function AuthLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
+        animationDuration: 200,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
       }}
     />
   );

@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, I18nManager, View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { I18nextProvider } from 'react-i18next';
+import Toast from 'react-native-toast-message';
 import {
   useFonts,
   Cairo_400Regular,
@@ -13,14 +15,15 @@ import {
 } from '@expo-google-fonts/cairo';
 import * as SplashScreen from 'expo-splash-screen';
 import { colors } from '../src/theme';
+import i18n from '../src/locales';
+import { useLanguageStore } from '../src/store/useLanguageStore';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
-// Enable RTL support globally
-I18nManager.allowRTL(true);
-
 export default function RootLayout() {
+  const [languageReady, setLanguageReady] = useState(false);
+  const isRTL = useLanguageStore((s) => s.isRTL);
   const [fontsLoaded] = useFonts({
     Cairo_400Regular,
     Cairo_500Medium,
@@ -29,12 +32,18 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
+    useLanguageStore.getState().initializeLanguage().then(() => {
+      setLanguageReady(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded && languageReady) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, languageReady]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !languageReady) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
@@ -43,12 +52,17 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <SafeAreaProvider>
-        <StatusBar style="dark" />
-        <Slot />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <I18nextProvider i18n={i18n}>
+      <GestureHandlerRootView style={styles.container}>
+        <View style={[styles.container, { direction: isRTL ? 'rtl' : 'ltr', flexDirection: 'column' }]}>
+          <SafeAreaProvider>
+            <StatusBar style="dark" />
+            <Slot />
+          </SafeAreaProvider>
+          <Toast />
+        </View>
+      </GestureHandlerRootView>
+    </I18nextProvider>
   );
 }
 

@@ -1,15 +1,13 @@
-import { I18nManager } from 'react-native';
+import { useLanguageStore } from '../store/useLanguageStore';
 
 interface UseIsRTLReturn {
   isRTL: boolean;
-  forceRTL: (forceRTL: boolean) => void;
-  allowRTL: (allowRTL: boolean) => void;
+  language: 'ar' | 'en';
 }
 
 export function useIsRTL(): UseIsRTLReturn {
-  return {
-    isRTL: I18nManager.isRTL,
-    forceRTL: I18nManager.forceRTL,
-    allowRTL: I18nManager.allowRTL,
-  };
+  // Use store's isRTL which is derived from language (reactive)
+  // This ensures UI updates immediately when language changes
+  const { isRTL, language } = useLanguageStore();
+  return { isRTL, language };
 }

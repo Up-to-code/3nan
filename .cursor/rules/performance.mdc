@@ -1,54 +1,46 @@
----
-description: Hyper-performance guidelines
-alwaysApply: true
----
+# Performance & Smoothness
 
-# Performance Rules
+Focus on performance and smooth user experience in this React Native app. Use **Bad** vs **Good** patterns below.
 
-## Storage
+## Navigation
 
-❌ BAD - AsyncStorage (slow, async):
-import AsyncStorage from '@react-native-async-storage/async-storage';
-await AsyncStorage.setItem('token', token);
-const token = await AsyncStorage.getItem('token');
+- **Bad:** No animation or `animation: 'none'` — feels abrupt
+- **Good:** Use `slide_from_right` (LTR) or `slide_from_left` (RTL), 200–300ms duration
+- **Bad:** Disabled gestures — users expect swipe-back
+- **Good:** `gestureEnabled: true`, `fullScreenGestureEnabled: true`
+- **Good:** Use `presentation: 'card'` for standard screens
 
-✅ GOOD - MMKV (30x faster, sync):
-import { storage } from '@/services/storage';
-storage.set('token', token);
-const token = storage.getString('token');
+## Lists & Rendering
 
-## Zustand Selectors
+- **Bad:** `FlatList` with large lists — can jank
+- **Good:** `@shopify/flash-list` with `estimatedItemSize`
+- **Bad:** Inline `style={{ flex: 1 }}` or new objects in list item render — new ref every render, extra re-renders
+- **Good:** `StyleSheet.create` outside component, or stable style refs
+- **Bad:** Anonymous callback in render: `onPress={() => doSomething(id)}` — new function every render, child re-renders
+- **Good:** `useCallback` or pass stable handler + data (e.g. `onPress={handler}` with `itemId` in item)
+- **Good:** Memoize list items with `React.memo()`; use `getItemType` for heterogeneous lists
 
-❌ BAD - subscribes to entire store, re-renders on any change:
-const { user, settings, notifications } = useAuthStore();
-// Component re-renders when ANY of these change
+## State Management
 
-✅ GOOD - subscribe only to what you need:
-const user = useAuthStore(s => s.user);
-// Only re-renders when user changes
+- **Bad:** `const store = useStore()` or `useStore()` — subscribes to whole store, re-renders on any change
+- **Good:** `useStore((s) => s.value)` — only re-render when `value` changes
+- **Bad:** Storing derived values in state (e.g. `isRTL` from `language`) without deriving — can get out of sync
+- **Good:** Derive in selector or `useMemo`: `const isRTL = useStore((s) => s.language === 'ar')`
+- **Good:** Split stores by domain to reduce subscription scope
 
-## Lists
+## Images & Assets
 
-❌ BAD - FlatList without optimization:
-<FlatList
-  data={items}
-  renderItem={({ item }) => <Item data={item} />}
-/>
+- **Bad:** Full-size images for thumbnails — memory and scroll jank
+- **Good:** Resized/cached thumbnails, appropriate dimensions
+- **Bad:** No loading/placeholder for images — layout shift, poor UX
+- **Good:** Placeholder or skeleton while loading
+- **Good:** Use SVG for icons when possible
 
-✅ GOOD - FlashList with memoized items:
-const MemoizedItem = memo(Item);
-<FlashList
-  data={items}
-  renderItem={({ item }) => <MemoizedItem data={item} />}
-  estimatedItemSize={80}
-/>
+## User Experience
 
-## Re-renders
-
-❌ BAD - object/array created every render:
-<UserCard user={{ name, avatar }} />
-<List items={items.filter(i => i.active)} />
-
-✅ GOOD - memoize objects and derived data:
-const userData = useMemo(() => ({ name, avatar }), [name, avatar]);
-const activeItems = useMemo(() => items.filter(i => i.active), [items]);
+- **Bad:** No feedback on tap (e.g. language switch) — user unsure if it worked
+- **Good:** Toast, loading state, or visual feedback
+- **Bad:** Blocking the UI for async work with no indicator
+- **Good:** Show loading state; keep UI responsive
+- **Bad:** Long lists with no virtualization
+- **Good:** Use FlashList/virtualized list

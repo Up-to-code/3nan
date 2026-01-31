@@ -3,27 +3,46 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { colors, spacing, typography, fonts, borderRadius } from '../../theme';
-import { useResponsive, useIsRTL } from '../../hooks';
+import { useResponsive, useIsRTL, useAppTranslation } from '../../hooks';
 
 export function AuthScreen() {
   const router = useRouter();
-  const { fontSize, wp, hp } = useResponsive();
+  const { fontSize, wp } = useResponsive();
   const { isRTL } = useIsRTL();
+  const { t } = useAppTranslation();
 
   const handleContinue = () => {
     router.replace('/(main)/home');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { direction: isRTL ? 'rtl' : 'ltr' }]}>
       <View style={[styles.content, { paddingHorizontal: wp(6) }]}>
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.logo, { fontSize: fontSize(typography.sizes.display) }]}>
-            ثنان
+     <View style={[styles.header, { alignItems: isRTL ? 'flex-end' : 'center' }]}>
+          <Text
+            style={[
+              styles.logo,
+              {
+                fontSize: fontSize(typography.sizes.display),
+                textAlign: isRTL ? 'right' : 'center',
+                writingDirection: isRTL ? 'rtl' : 'ltr',
+              },
+            ]}
+          >
+            {t('app.name')}
           </Text>
-          <Text style={[styles.tagline, { fontSize: fontSize(typography.sizes.md) }]}>
-            محادثاتك، في كل مكان
+          <Text
+            style={[
+              styles.tagline,
+              {
+                fontSize: fontSize(typography.sizes.md),
+                textAlign: isRTL ? 'right' : 'center',
+                writingDirection: isRTL ? 'rtl' : 'ltr',
+              },
+            ]}
+          >
+            {t('app.tagline')}
           </Text>
         </View>
 
@@ -35,10 +54,14 @@ export function AuthScreen() {
           <Text
             style={[
               styles.welcomeText,
-              { fontSize: fontSize(typography.sizes.xl), textAlign: isRTL ? 'right' : 'center' },
+              {
+                fontSize: fontSize(typography.sizes.xl),
+                textAlign: isRTL ? 'right' : 'center',
+                writingDirection: isRTL ? 'rtl' : 'ltr',
+              },
             ]}
           >
-            ابدأ الآن
+            {t('auth.getStarted')}
           </Text>
 
           {/* Apple Button */}
@@ -46,9 +69,27 @@ export function AuthScreen() {
             style={[styles.appleButton, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}
             onPress={handleContinue}
           >
-            <Text style={[styles.appleIcon, { fontSize: fontSize(18) }]}></Text>
-            <Text style={[styles.appleText, { fontSize: fontSize(typography.sizes.md) }]}>
-              المتابعة مع Apple
+            <Text
+              style={[
+                styles.appleIcon,
+                {
+                  fontSize: fontSize(18),
+                  textAlign: isRTL ? 'right' : 'left',
+                  writingDirection: isRTL ? 'rtl' : 'ltr',
+                },
+              ]}
+            />
+            <Text
+              style={[
+                styles.appleText,
+                {
+                  fontSize: fontSize(typography.sizes.md),
+                  textAlign: isRTL ? 'right' : 'left',
+                  writingDirection: isRTL ? 'rtl' : 'ltr',
+                },
+              ]}
+            >
+              {t('auth.continueWithApple')}
             </Text>
           </Pressable>
 
@@ -57,9 +98,29 @@ export function AuthScreen() {
             style={[styles.outlineButton, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}
             onPress={handleContinue}
           >
-            <Text style={[styles.googleIcon, { fontSize: fontSize(18) }]}>G</Text>
-            <Text style={[styles.outlineText, { fontSize: fontSize(typography.sizes.md) }]}>
-              المتابعة مع Google
+            <Text
+              style={[
+                styles.googleIcon,
+                {
+                  fontSize: fontSize(18),
+                  textAlign: isRTL ? 'right' : 'left',
+                  writingDirection: isRTL ? 'rtl' : 'ltr',
+                },
+              ]}
+            >
+              G
+            </Text>
+            <Text
+              style={[
+                styles.outlineText,
+                {
+                  fontSize: fontSize(typography.sizes.md),
+                  textAlign: isRTL ? 'right' : 'left',
+                  writingDirection: isRTL ? 'rtl' : 'ltr',
+                },
+              ]}
+            >
+              {t('auth.continueWithGoogle')}
             </Text>
           </Pressable>
 
@@ -68,17 +129,46 @@ export function AuthScreen() {
             style={[styles.outlineButton, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}
             onPress={handleContinue}
           >
-            <Text style={[styles.emailIcon, { fontSize: fontSize(18) }]}>✉</Text>
-            <Text style={[styles.outlineText, { fontSize: fontSize(typography.sizes.md) }]}>
-              المتابعة مع البريد الإلكتروني
+            <Text
+              style={[
+                styles.emailIcon,
+                {
+                  fontSize: fontSize(18),
+                  textAlign: isRTL ? 'right' : 'left',
+                  writingDirection: isRTL ? 'rtl' : 'ltr',
+                },
+              ]}
+            >
+              ✉
+            </Text>
+            <Text
+              style={[
+                styles.outlineText,
+                {
+                  fontSize: fontSize(typography.sizes.md),
+                  textAlign: isRTL ? 'right' : 'left',
+                  writingDirection: isRTL ? 'rtl' : 'ltr',
+                },
+              ]}
+            >
+              {t('auth.continueWithEmail')}
             </Text>
           </Pressable>
         </View>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={[styles.footerText, { fontSize: fontSize(typography.sizes.xs) }]}>
-            بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية
+        <View style={[styles.footer, { alignItems: isRTL ? 'flex-end' : 'center' }]}>
+          <Text
+            style={[
+              styles.footerText,
+              {
+                fontSize: fontSize(typography.sizes.xs),
+                textAlign: isRTL ? 'right' : 'center',
+                writingDirection: isRTL ? 'rtl' : 'ltr',
+              },
+            ]}
+          >
+            {t('auth.termsFooter')}
           </Text>
         </View>
       </View>

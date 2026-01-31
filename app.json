@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "stream",
-    "slug": "stream",
+    "name": "3nan",
+    "slug": "3nan",
     "version": "1.0.0",
-    "scheme": "stream",
+    "scheme": "3nan",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.stream.app"
+      "bundleIdentifier": "com.3nan.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +24,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.stream.app"
+      "package": "com.3nan.app"
     },
     "web": {
       "favicon": "./assets/favicon.png",
