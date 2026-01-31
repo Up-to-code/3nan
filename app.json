@@ -9,7 +9,6 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/icons/3nan-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

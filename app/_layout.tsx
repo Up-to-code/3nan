@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Slot, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -44,15 +44,7 @@ export default function RootLayout() {
   }, [fontsLoaded, languageReady]);
 
   if (!fontsLoaded || !languageReady) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Image
-          source={require('../assets/icons/3nan-icon.png')}
-          style={styles.loadingIcon}
-          resizeMode="contain"
-        />
-      </View>
-    );
+    return null;
   }
 
   return (
@@ -79,15 +71,5 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.background,
-  },
-  loadingIcon: {
-    width: 120,
-    height: 120,
   },
 });
