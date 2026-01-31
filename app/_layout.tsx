@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Slot } from 'expo-router';
+import { StyleSheet, View, Image } from 'react-native';
+import { Slot, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -46,7 +46,11 @@ export default function RootLayout() {
   if (!fontsLoaded || !languageReady) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
+        <Image
+          source={require('../assets/icons/3nan-icon.png')}
+          style={styles.loadingIcon}
+          resizeMode="contain"
+        />
       </View>
     );
   }
@@ -57,7 +61,13 @@ export default function RootLayout() {
         <View style={[styles.container, { direction: isRTL ? 'rtl' : 'ltr', flexDirection: 'column' }]}>
           <SafeAreaProvider>
             <StatusBar style="dark" />
-            <Slot />
+            <Stack screenOptions={{
+              headerShown: false,
+              animation: 'fade',
+              animationDuration: 200,
+              gestureEnabled: true,
+              fullScreenGestureEnabled: true,
+            }}/>
           </SafeAreaProvider>
           <Toast />
         </View>
@@ -75,5 +85,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.background,
+  },
+  loadingIcon: {
+    width: 120,
+    height: 120,
   },
 });
