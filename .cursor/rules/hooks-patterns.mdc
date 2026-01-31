@@ -1,0 +1,58 @@
+---
+description: Custom hooks patterns
+globs: "**/hooks/**/*.ts"
+alwaysApply: false
+---
+
+# Hook Patterns
+
+## Return Type
+
+❌ BAD - returning array, no types:
+function useAuth() {
+  return [user, setUser, loading, error, signIn, signOut];
+}
+const [user, setUser, loading, error, signIn, signOut] = useAuth(); // confusing
+
+✅ GOOD - return named object with types:
+interface UseAuthReturn {
+  user: User | null;
+  isLoading: boolean;
+  signIn: (provider: Provider) => Promise<void>;
+}
+function useAuth(): UseAuthReturn {
+  return { user, isLoading, signIn };
+}
+
+## Functions in Hooks
+
+❌ BAD - unstable function reference:
+function useAuth() {
+  const signIn = async () => { ... }; // new function every render
+  return { signIn };
+}
+
+✅ GOOD - memoized with useCallback:
+function useAuth() {
+  const signIn = useCallback(async () => { ... }, []);
+  return { signIn };
+}
+
+## Logic in Components
+
+❌ BAD - business logic in component:
+function AuthScreen() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const signIn = async () => {
+    setLoading(true);
+    try { await api.signIn(); }
+    catch (e) { setError(e); }
+    finally { setLoading(false); }
+  };
+}
+
+✅ GOOD - extract to hook:
+function AuthScreen() {
+  const { signIn, isLoading, error } = useAuthFlow();
+}

@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "3nan",
+    "tagline": "Your conversations, everywhere"
+  },
+  "auth": {
+    "getStarted": "Get started",
+    "continueWithApple": "Continue with Apple",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithEmail": "Continue with Email",
+    "termsFooter": "By continuing, you agree to our Terms of Service and Privacy Policy"
+  },
+  "home": {
+    "welcomeBack": "Welcome back,",
+    "user": "User",
+    "signedInWith": "Signed in with",
+    "email": "Email",
+    "screenSize": "Screen size",
+    "tablet": "tablet",
+    "phone": "phone",
+    "signOut": "Sign Out"
+  },
+  "settings": {
+    "language": "Language",
+    "arabic": "العربية",
+    "english": "English"
+  }
+}

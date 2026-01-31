@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "ثنان",
+    "tagline": "محادثاتك، في كل مكان"
+  },
+  "auth": {
+    "getStarted": "ابدأ الآن",
+    "continueWithApple": "المتابعة مع Apple",
+    "continueWithGoogle": "المتابعة مع Google",
+    "continueWithEmail": "المتابعة مع البريد الإلكتروني",
+    "termsFooter": "بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية"
+  },
+  "home": {
+    "welcomeBack": "مرحباً بعودتك،",
+    "user": "المستخدم",
+    "signedInWith": "تسجيل الدخول عبر",
+    "email": "البريد الإلكتروني",
+    "screenSize": "حجم الشاشة",
+    "tablet": "تابلت",
+    "phone": "هاتف",
+    "signOut": "تسجيل الخروج"
+  },
+  "settings": {
+    "language": "اللغة",
+    "arabic": "العربية",
+    "english": "English"
+  }
+}

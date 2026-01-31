@@ -1,0 +1,60 @@
+---
+description: React Native component patterns
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# Component Patterns
+
+## Props
+
+❌ BAD - no types, destructure everywhere:
+function Button(props) {
+  return <Pressable onPress={props.onPress}>{props.children}</Pressable>;
+}
+
+✅ GOOD - typed props interface:
+interface ButtonProps {
+  onPress: () => void;
+  children: React.ReactNode;
+}
+const Button: React.FC<ButtonProps> = ({ onPress, children }) => { ... }
+
+## Inline Functions
+
+❌ BAD - new function every render:
+<Pressable onPress={() => handlePress(item.id)}>
+
+✅ GOOD - memoized callback:
+const handleItemPress = useCallback(() => handlePress(item.id), [item.id]);
+<Pressable onPress={handleItemPress}>
+
+## Giant JSX
+
+❌ BAD - 100+ lines of JSX in one component:
+return (
+  <View>
+    <View><Text>...</Text><Image />...</View>
+    <View><Text>...</Text><Image />...</View>
+    // 80 more lines
+  </View>
+);
+
+✅ GOOD - extract subcomponents:
+return (
+  <View>
+    <AuthHeader />
+    <AuthForm onSubmit={handleSubmit} />
+    <AuthFooter />
+  </View>
+);
+
+## Animations
+
+❌ BAD - using old Animated API:
+import { Animated } from 'react-native';
+const fadeAnim = useRef(new Animated.Value(0)).current;
+
+✅ GOOD - Reanimated on UI thread:
+import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+const opacity = useSharedValue(0);

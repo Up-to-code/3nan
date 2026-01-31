@@ -1,0 +1,46 @@
+---
+description: Stream app architecture - screen-based tree structure
+alwaysApply: true
+---
+
+# Project Architecture
+
+## Folder Structure
+
+❌ BAD - flat structure, everything mixed:
+src/
+  components/
+    Avatar.tsx
+    AvatarTrigger.tsx
+    AuthButton.tsx
+    HomeHeader.tsx
+  hooks/
+    useAuth.ts
+    useHome.ts
+
+✅ GOOD - screen-based with tree architecture:
+src/
+  screens/
+    auth/
+      components/
+        AuthButton/
+          AuthButton.tsx
+          AuthButtonIcon.tsx
+      hooks/
+        useAuthFlow/
+          useAuthFlow.ts
+  shared/
+    components/
+      Avatar/
+        Avatar.tsx
+        AvatarTrigger.tsx
+
+## Import Rules
+
+❌ BAD - importing from another screen:
+// In screens/home/HomeScreen.tsx
+import { AuthButton } from '../auth/components/AuthButton';
+
+✅ GOOD - use shared or duplicate if needed:
+// Move to shared/ if used in multiple screens
+import { Button } from '@/shared/components/Button';

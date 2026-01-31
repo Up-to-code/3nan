@@ -1,0 +1,54 @@
+---
+description: Hyper-performance guidelines
+alwaysApply: true
+---
+
+# Performance Rules
+
+## Storage
+
+❌ BAD - AsyncStorage (slow, async):
+import AsyncStorage from '@react-native-async-storage/async-storage';
+await AsyncStorage.setItem('token', token);
+const token = await AsyncStorage.getItem('token');
+
+✅ GOOD - MMKV (30x faster, sync):
+import { storage } from '@/services/storage';
+storage.set('token', token);
+const token = storage.getString('token');
+
+## Zustand Selectors
+
+❌ BAD - subscribes to entire store, re-renders on any change:
+const { user, settings, notifications } = useAuthStore();
+// Component re-renders when ANY of these change
+
+✅ GOOD - subscribe only to what you need:
+const user = useAuthStore(s => s.user);
+// Only re-renders when user changes
+
+## Lists
+
+❌ BAD - FlatList without optimization:
+<FlatList
+  data={items}
+  renderItem={({ item }) => <Item data={item} />}
+/>
+
+✅ GOOD - FlashList with memoized items:
+const MemoizedItem = memo(Item);
+<FlashList
+  data={items}
+  renderItem={({ item }) => <MemoizedItem data={item} />}
+  estimatedItemSize={80}
+/>
+
+## Re-renders
+
+❌ BAD - object/array created every render:
+<UserCard user={{ name, avatar }} />
+<List items={items.filter(i => i.active)} />
+
+✅ GOOD - memoize objects and derived data:
+const userData = useMemo(() => ({ name, avatar }), [name, avatar]);
+const activeItems = useMemo(() => items.filter(i => i.active), [items]);

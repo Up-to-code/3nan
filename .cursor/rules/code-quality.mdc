@@ -1,0 +1,44 @@
+---
+description: SOLID principles and code quality rules
+alwaysApply: true
+---
+
+# Code Quality
+
+## File Size
+
+❌ BAD - 300+ line file doing everything:
+// AuthScreen.tsx - 350 lines
+// validation, API calls, UI, animations, state all in one file
+
+✅ GOOD - split into focused files:
+// AuthScreen.tsx - 80 lines (UI only)
+// useAuthFlow.ts - 40 lines (logic)
+// authValidation.ts - 30 lines (validation)
+
+Max 150 lines/file. Max 50 lines/function.
+
+## Single Responsibility
+
+❌ BAD - component doing too much:
+function AuthScreen() {
+  // validation logic here
+  // API call here
+  // animation logic here
+  // 15 useState calls
+  // render 200 lines of JSX
+}
+
+✅ GOOD - one purpose per file:
+function AuthScreen() {
+  const { signIn, error } = useAuthFlow();
+  return <AuthForm onSubmit={signIn} error={error} />;
+}
+
+## Naming
+
+❌ BAD:
+data.ts, utils.ts, helpers.ts, stuff.tsx, Component1.tsx
+
+✅ GOOD:
+userValidation.ts, formatDate.ts, AuthButton.tsx, useAuthFlow.ts

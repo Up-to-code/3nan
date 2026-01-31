@@ -1,0 +1,25 @@
+---
+description: Use Bun for package management and scripts
+alwaysApply: true
+---
+
+# Bun
+
+Use **Bun** for this project.
+
+## Package Management
+
+❌ BAD - npm:
+npm install
+npm run start
+
+✅ GOOD - Bun:
+bun install
+bun run start
+
+## Commands
+
+- Install: `bun install` or `bun add`
+- Run: `bun run start` or `bun start`
+- Add package: `bun add <package>`
+- Add dev package: `bun add -d <package>`
