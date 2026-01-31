@@ -2,7 +2,7 @@
 
 React Native (Expo) app with Arabic/English (RTL/LTR) support, i18n, and Convex.
 
-## Setup
+## 🚀 Setup
 
 - **Runtime:** Node 18+
 - **Package manager:** [Bun](https://bun.sh)
@@ -12,7 +12,7 @@ bun install
 bun run start
 ```
 
-## Scripts
+## 📜 Scripts
 
 | Command        | Description              |
 |----------------|--------------------------|
@@ -20,20 +20,20 @@ bun run start
 | `bun run ios`   | Run on iOS simulator     |
 | `bun run android` | Run on Android emulator |
 
-## Features
+## ✨ Features
 
 - **i18n:** Arabic and English via `react-i18next`; translations in `src/locales/`
 - **RTL/LTR:** Layout direction follows app language (Arabic = RTL). Use `useIsRTL()` or `useLayoutDirection()` in components
 - **Language switch:** Stored in AsyncStorage; toast prompts user to restart app when direction changes (required on iOS)
 - **Navigation:** Expo Router with RTL-aware slide animations; see `.cursor/rules/performance.mdc` for patterns
 
-## Recommendations
+## 💡 Recommendations
 
 1. **RTL:** After changing to/from Arabic, close and reopen the app so native RTL applies
 2. **Performance:** Prefer FlashList for long lists; use Zustand selectors; see `.cursor/rules/performance.mdc`
 3. **Env:** Copy `.env.example` to `.env.local` if needed; never commit secrets
 
-## First push to GitHub
+## 📤 First push to GitHub
 
 Configuration for pushing this repo to GitHub for the first time.
 
