@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, ViewStyle, TextStyle } from 'react-native';
 import { typography } from '../../../theme';
-import { useResponsive, useIsRTL } from '../../../hooks';
+import { useResponsive, useIsRTL, useHapticFeedback, type HapticFeedbackType } from '../../../hooks';
 import { styles } from './Button.styles';
 
 export type ButtonVariant = 'primary' | 'outline';
@@ -10,6 +10,8 @@ export interface ButtonProps {
   variant?: ButtonVariant;
   label?: string;
   onPress: () => void;
+  disabled?: boolean;
+  hapticType?: HapticFeedbackType | 'none';
   icon?: string;
   iconColor?: string;
   children?: React.ReactNode;
@@ -21,6 +23,8 @@ export function Button({
   variant = 'outline',
   label,
   onPress,
+  disabled = false,
+  hapticType = 'selection',
   icon,
   iconColor,
   children,
@@ -29,6 +33,18 @@ export function Button({
 }: ButtonProps) {
   const { fontSize } = useResponsive();
   const { isRTL } = useIsRTL();
+  const { trigger } = useHapticFeedback();
+
+  const handlePress = () => {
+    if (disabled) return;
+    if (hapticType !== 'none') {
+      trigger(hapticType)
+        .catch(() => {})
+        .finally(() => onPress());
+    } else {
+      onPress();
+    }
+  };
 
   const isPrimary = variant === 'primary';
   const flexDir: 'row' | 'row-reverse' = isRTL ? 'row-reverse' : 'row';
@@ -37,6 +53,7 @@ export function Button({
     styles.base,
     isPrimary ? styles.primary : styles.outline,
     { flexDirection: flexDir },
+    disabled && { opacity: 0.6 },
     style,
   ];
   const labelStyle = [
@@ -77,7 +94,12 @@ export function Button({
   };
 
   return (
-    <Pressable style={buttonStyle} onPress={onPress}>
+    <Pressable
+      style={buttonStyle}
+      onPress={handlePress}
+      disabled={disabled}
+      accessibilityState={{ disabled }}
+    >
       {hasIcon ? <Text style={iconStyle}>{icon}</Text> : null}
       {renderChildren()}
       {hasLabel ? (

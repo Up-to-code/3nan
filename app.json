@@ -12,6 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.3nan.app"
@@ -28,6 +29,15 @@
     "web": {
       "favicon": "./assets/icons/3nan-icon.png",
       "bundler": "metro"
-    }
+    },
+    "plugins": [
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow access to Face ID for secure storage"
+        }
+      ]
+    ]
   }
 }

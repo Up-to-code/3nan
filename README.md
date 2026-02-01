@@ -1,6 +1,6 @@
 # 3nan
 
-React Native (Expo) app with Arabic/English (RTL/LTR) support, i18n, and Convex.
+React Native (Expo) app with Arabic/English (RTL/LTR) support, i18n, Convex, and Better Auth.
 
 ## 🚀 Setup
 
@@ -24,14 +24,17 @@ bun run start
 
 - **i18n:** Arabic and English via `react-i18next`; translations in `src/locales/`
 - **RTL/LTR:** Layout direction follows app language (Arabic = RTL). Use `useIsRTL()` or `useLayoutDirection()` in components
-- **Language switch:** Stored in AsyncStorage; toast prompts user to restart app when direction changes (required on iOS)
-- **Navigation:** Expo Router with RTL-aware slide animations; see `.cursor/rules/performance.mdc` for patterns
+- **Language switch:** Stored in AsyncStorage; a native Alert prompts the user to restart the app when direction changes (required on iOS)
+- **Auth:** Better Auth with Convex; email/password and optional social sign-in. Session-based routing: index redirects to (main) when signed in, (auth) when not; (main) is protected, (auth) is public
+- **Navigation:** Expo Router with `Stack.Protected` for private/public screens and RTL-aware slide animations; see `.cursor/rules/performance.mdc` for patterns
+- **Haptics:** `useHapticFeedback()` hook and Button `hapticType` for tap feedback (e.g. selection on iOS)
+- **No toasts:** Auth errors shown as inline labels; language restart uses Alert
 
 ## 💡 Recommendations
 
 1. **RTL:** After changing to/from Arabic, close and reopen the app so native RTL applies
 2. **Performance:** Prefer FlashList for long lists; use Zustand selectors; see `.cursor/rules/performance.mdc`
-3. **Env:** Copy `.env.example` to `.env.local` if needed; never commit secrets
+3. **Env:** Set `EXPO_PUBLIC_CONVEX_URL` and Convex/Better Auth env as needed; never commit secrets
 
 ## 📤 First push to GitHub
 

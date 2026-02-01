@@ -1,12 +1,13 @@
 import { create } from 'zustand';
-import { I18nManager } from 'react-native';
+import { Alert, I18nManager } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Localization from 'expo-localization';
-import Toast from 'react-native-toast-message';
 import i18n from '../locales';
 import type { SupportedLanguage } from '../locales';
 
 const STORAGE_KEY = '@app.language';
+
+let hasLoggedRTLMismatch = false;
 
 async function getStoredLanguage(): Promise<SupportedLanguage | null> {
   try {
@@ -31,21 +32,18 @@ function getSystemLanguage(): SupportedLanguage {
   }
 }
 
-function showRestartToast(isRTL: boolean): void {
-  console.log('[Language] Showing restart toast, isRTL:', isRTL);
-  Toast.show({
-    type: 'info',
-    text1: isRTL ? 'تم تغيير اللغة' : 'Language Changed',
-    text2: isRTL
-      ? 'يرجى إغلاق التطبيق وإعادة فتحه'
-      : 'Please close and reopen the app',
-    position: 'bottom',
-    visibilityTime: 4000,
-  });
+function showRestartAlert(isRTL: boolean): void {
+  console.log('[Language] Showing restart alert, isRTL:', isRTL);
+  const title = isRTL ? 'تم تغيير اللغة' : 'Language Changed';
+  const message = isRTL
+    ? 'يرجى إغلاق التطبيق وإعادة فتحه'
+    : 'Please close and reopen the app';
+  Alert.alert(title, message);
 }
 
 interface LanguageState {
   language: SupportedLanguage;
+  /** Layout direction from app language only (ar = RTL), not device locale. */
   isRTL: boolean;
   isChangingLanguage: boolean;
   setLanguage: (lang: SupportedLanguage) => void;
@@ -85,7 +83,7 @@ export const useLanguageStore = create<LanguageState>((set) => ({
           expected: isRTL,
           actual: I18nManager.isRTL,
         });
-        showRestartToast(isRTL);
+        showRestartAlert(isRTL);
       } else {
         console.log('[Language] Language changed, no restart needed');
       }
@@ -116,10 +114,13 @@ export const useLanguageStore = create<LanguageState>((set) => ({
 
       // Check if native RTL matches expected
       if (I18nManager.isRTL !== isRTL) {
-        console.log('[Language] RTL mismatch on init:', {
-          expected: isRTL,
-          actual: I18nManager.isRTL,
-        });
+        if (!hasLoggedRTLMismatch) {
+          console.log('[Language] RTL mismatch on init:', {
+            expected: isRTL,
+            actual: I18nManager.isRTL,
+          });
+          hasLoggedRTLMismatch = true;
+        }
         I18nManager.forceRTL(isRTL);
       }
 

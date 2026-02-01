@@ -1,11 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Slot, Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { I18nextProvider } from 'react-i18next';
-import Toast from 'react-native-toast-message';
 import {
   useFonts,
   Cairo_400Regular,
@@ -14,16 +7,21 @@ import {
   Cairo_700Bold,
 } from '@expo-google-fonts/cairo';
 import * as SplashScreen from 'expo-splash-screen';
-import { colors } from '../src/theme';
-import i18n from '../src/locales';
-import { useLanguageStore } from '../src/store/useLanguageStore';
+import { useLanguageStore } from '@/store/useLanguageStore';
+import { ConvexReactClient } from 'convex/react';
+import { authClient } from '@/lib/auth-client';
+import { AppProviders } from '@/components/providers';
+import { SessionAwareStack } from '@/navigation';
 
-// Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
+
+const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
+  expectAuth: false,
+  unsavedChangesWarning: false,
+});
 
 export default function RootLayout() {
   const [languageReady, setLanguageReady] = useState(false);
-  const isRTL = useLanguageStore((s) => s.isRTL);
   const [fontsLoaded] = useFonts({
     Cairo_400Regular,
     Cairo_500Medium,
@@ -37,39 +35,13 @@ export default function RootLayout() {
     });
   }, []);
 
-  useEffect(() => {
-    if (fontsLoaded && languageReady) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, languageReady]);
-
   if (!fontsLoaded || !languageReady) {
     return null;
   }
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <GestureHandlerRootView style={styles.container}>
-        <View style={[styles.container, { direction: isRTL ? 'rtl' : 'ltr', flexDirection: 'column' }]}>
-          <SafeAreaProvider>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{
-              headerShown: false,
-              animation: 'fade',
-              animationDuration: 200,
-              gestureEnabled: true,
-              fullScreenGestureEnabled: true,
-            }}/>
-          </SafeAreaProvider>
-          <Toast />
-        </View>
-      </GestureHandlerRootView>
-    </I18nextProvider>
+    <AppProviders convex={convex} authClient={authClient}>
+      <SessionAwareStack />
+    </AppProviders>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
