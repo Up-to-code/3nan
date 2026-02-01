@@ -15,7 +15,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { colors, spacing } from '../../theme';
-import { useResponsive, useAppTranslation, useHapticFeedback } from '../../hooks';
+import { useResponsive, useAppTranslation, useHapticFeedback, useLayoutDirection } from '../../hooks';
 import { Button } from '../../components/ui';
 import { useCreateAuth } from './hooks/useCreateAuth';
 import { styles } from './EmailFormScreen.styles';
@@ -30,6 +30,7 @@ export function EmailFormScreen() {
   const { wp, fontSize } = useResponsive();
   const { t } = useAppTranslation();
   const { trigger } = useHapticFeedback();
+  const { textStyle, rowDirection, alignStart } = useLayoutDirection();
   const { isLoading, onEmailSignIn, onEmailSignUp, error, clearError } = useCreateAuth();
   const canDismiss = router.canGoBack();
 
@@ -108,11 +109,23 @@ export function EmailFormScreen() {
     <View style={rootStyle} accessibilityLabel={t('auth.emailFormA11y')}>
       {canDismiss &&
         (Platform.OS === 'ios' ? (
-          <BlurView intensity={50} tint="light" style={styles.topBar}>
+          <BlurView
+            intensity={50}
+            tint="light"
+            style={[styles.topBar, { flexDirection: rowDirection, justifyContent: alignStart }]}
+          >
             {closeButtonWrapped}
           </BlurView>
         ) : (
-          <View style={[styles.topBar, styles.topBarFallback]}>{closeButtonWrapped}</View>
+          <View
+            style={[
+              styles.topBar,
+              styles.topBarFallback,
+              { flexDirection: rowDirection, justifyContent: alignStart },
+            ]}
+          >
+            {closeButtonWrapped}
+          </View>
         ))}
       <KeyboardAvoidingView
         style={styles.container}
@@ -130,9 +143,11 @@ export function EmailFormScreen() {
           {view === 'sign_in' && (
             <>
               <View style={styles.field}>
-                <Text style={[styles.label, { fontSize: fontSize(14) }]}>{t('auth.emailLabel')}</Text>
+                <Text style={[styles.label, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}>
+                  {t('auth.emailLabel')}
+                </Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, textStyle, { alignSelf: 'stretch' }]}
                   value={email}
                   onChangeText={setEmail}
                   placeholder={t('auth.emailPlaceholder')}
@@ -144,11 +159,11 @@ export function EmailFormScreen() {
                 />
               </View>
               <View style={styles.field}>
-                <Text style={[styles.label, { fontSize: fontSize(14) }]}>
+                <Text style={[styles.label, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}>
                   {t('auth.passwordLabel')}
                 </Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, textStyle, { alignSelf: 'stretch' }]}
                   value={password}
                   onChangeText={setPassword}
                   placeholder={t('auth.passwordPlaceholder')}
@@ -158,7 +173,11 @@ export function EmailFormScreen() {
                 />
               </View>
               {error ? (
-                <Text style={[styles.errorLabel, { fontSize: fontSize(14) }]}>{error}</Text>
+                <Text
+                  style={[styles.errorLabel, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}
+                >
+                  {error}
+                </Text>
               ) : null}
               <View style={styles.actions}>
                 <Button
@@ -180,9 +199,11 @@ export function EmailFormScreen() {
           {view === 'sign_up' && (
             <>
               <View style={styles.field}>
-                <Text style={[styles.label, { fontSize: fontSize(14) }]}>{t('auth.name')}</Text>
+                <Text style={[styles.label, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}>
+                  {t('auth.name')}
+                </Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, textStyle, { alignSelf: 'stretch' }]}
                   value={name}
                   onChangeText={setName}
                   placeholder={t('auth.namePlaceholder')}
@@ -193,9 +214,11 @@ export function EmailFormScreen() {
                 />
               </View>
               <View style={styles.field}>
-                <Text style={[styles.label, { fontSize: fontSize(14) }]}>{t('auth.emailLabel')}</Text>
+                <Text style={[styles.label, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}>
+                  {t('auth.emailLabel')}
+                </Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, textStyle, { alignSelf: 'stretch' }]}
                   value={email}
                   onChangeText={setEmail}
                   placeholder={t('auth.emailPlaceholder')}
@@ -207,11 +230,11 @@ export function EmailFormScreen() {
                 />
               </View>
               <View style={styles.field}>
-                <Text style={[styles.label, { fontSize: fontSize(14) }]}>
+                <Text style={[styles.label, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}>
                   {t('auth.passwordLabel')}
                 </Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, textStyle, { alignSelf: 'stretch' }]}
                   value={password}
                   onChangeText={setPassword}
                   placeholder={t('auth.passwordPlaceholder')}
@@ -221,7 +244,11 @@ export function EmailFormScreen() {
                 />
               </View>
               {error ? (
-                <Text style={[styles.errorLabel, { fontSize: fontSize(14) }]}>{error}</Text>
+                <Text
+                  style={[styles.errorLabel, textStyle, { fontSize: fontSize(14), alignSelf: 'stretch', width: '100%' }]}
+                >
+                  {error}
+                </Text>
               ) : null}
               <View style={styles.actions}>
                 <Button

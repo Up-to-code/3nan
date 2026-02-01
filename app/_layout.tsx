@@ -15,6 +15,11 @@ import { SessionAwareStack } from '@/navigation';
 
 SplashScreen.preventAutoHideAsync();
 
+const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
+  expectAuth: false,
+  unsavedChangesWarning: false,
+});
+
 export default function RootLayout() {
   const [languageReady, setLanguageReady] = useState(false);
   const [fontsLoaded] = useFonts({
@@ -33,11 +38,6 @@ export default function RootLayout() {
   if (!fontsLoaded || !languageReady) {
     return null;
   }
-
-  const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
-    expectAuth: false,
-    unsavedChangesWarning: false,
-  });
 
   return (
     <AppProviders convex={convex} authClient={authClient}>

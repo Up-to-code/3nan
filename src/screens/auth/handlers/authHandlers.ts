@@ -25,11 +25,30 @@ export interface AuthError extends Error {
   errorCodes?: string[];
 }
 
-/** Creates an error with error codes array */
-function createError(codes: string[]): AuthError {
-  const error = new Error('AUTH_ERROR') as AuthError;
+/** Creates an error with optional message and error codes for i18n */
+function createError(
+  opts: string[] | { message?: string; errorCodes?: string[] }
+): AuthError {
+  const codes = Array.isArray(opts) ? opts : opts.errorCodes ?? [];
+  const message = Array.isArray(opts) ? 'AUTH_ERROR' : opts.message ?? 'AUTH_ERROR';
+  const error = new Error(message) as AuthError;
   error.errorCodes = codes;
   return error;
+}
+
+/** Navigate to index so index can redirect to (main)/home when session is ready. Retries once after 100ms on failure. */
+async function redirectAfterAuth(router: Router): Promise<void> {
+  try {
+    router.replace('/');
+  } catch (err) {
+    console.warn('[Auth] Redirect failed:', err);
+    await new Promise((r) => setTimeout(r, 100));
+    try {
+      router.replace('/');
+    } catch (e2) {
+      throw err;
+    }
+  }
 }
 
 // ============================================
@@ -51,7 +70,7 @@ export async function handleAppleAuth(router: Router): Promise<void> {
     throw createError([ERROR_CODES.AUTH_NO_DATA]);
   }
 
-  router.replace('/(main)/home');
+  await redirectAfterAuth(router);
 }
 
 /**
@@ -69,7 +88,7 @@ export async function handleGoogleAuth(router: Router): Promise<void> {
     throw createError([ERROR_CODES.AUTH_NO_DATA]);
   }
 
-  router.replace('/(main)/home');
+  await redirectAfterAuth(router);
 }
 
 // ============================================
@@ -101,14 +120,18 @@ export async function handleEmailSignIn(
   });
 
   if (error) {
-    throw new Error(error.message || ERROR_CODES.AUTH_FAILED);
+    const err = error as { message?: string; errorCodes?: string[] };
+    throw createError({
+      message: err.message ?? ERROR_CODES.AUTH_FAILED,
+      errorCodes: err.errorCodes ?? [ERROR_CODES.AUTH_FAILED],
+    });
   }
 
   if (!data) {
     throw createError([ERROR_CODES.AUTH_NO_DATA]);
   }
 
-  router.replace('/(main)/home');
+  await redirectAfterAuth(router);
 }
 
 /**
@@ -136,12 +159,16 @@ export async function handleEmailSignUp(
   });
 
   if (error) {
-    throw new Error(error.message || ERROR_CODES.AUTH_FAILED);
+    const err = error as { message?: string; errorCodes?: string[] };
+    throw createError({
+      message: err.message ?? ERROR_CODES.AUTH_FAILED,
+      errorCodes: err.errorCodes ?? [ERROR_CODES.AUTH_FAILED],
+    });
   }
 
   if (!data) {
     throw createError([ERROR_CODES.AUTH_NO_DATA]);
   }
 
-  router.replace('/(main)/home');
+  await redirectAfterAuth(router);
 }

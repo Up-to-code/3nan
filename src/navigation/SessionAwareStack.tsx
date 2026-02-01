@@ -8,7 +8,9 @@ export function SessionAwareStack() {
 
   useEffect(() => {
     if (!isPending) {
-      SplashScreen.hideAsync();
+      void SplashScreen.hideAsync().catch((err) => {
+        console.warn('[SessionAwareStack] SplashScreen.hideAsync failed:', err);
+      });
     }
   }, [isPending]);
 
@@ -24,7 +26,8 @@ export function SessionAwareStack() {
         animationDuration: 200,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
-      }}
+        
+       }}
     >
       <Stack.Screen name="index" />
       <Stack.Protected guard={!!session}>

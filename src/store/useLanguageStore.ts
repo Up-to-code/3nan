@@ -7,6 +7,8 @@ import type { SupportedLanguage } from '../locales';
 
 const STORAGE_KEY = '@app.language';
 
+let hasLoggedRTLMismatch = false;
+
 async function getStoredLanguage(): Promise<SupportedLanguage | null> {
   try {
     const stored = await AsyncStorage.getItem(STORAGE_KEY);
@@ -41,6 +43,7 @@ function showRestartAlert(isRTL: boolean): void {
 
 interface LanguageState {
   language: SupportedLanguage;
+  /** Layout direction from app language only (ar = RTL), not device locale. */
   isRTL: boolean;
   isChangingLanguage: boolean;
   setLanguage: (lang: SupportedLanguage) => void;
@@ -111,10 +114,13 @@ export const useLanguageStore = create<LanguageState>((set) => ({
 
       // Check if native RTL matches expected
       if (I18nManager.isRTL !== isRTL) {
-        console.log('[Language] RTL mismatch on init:', {
-          expected: isRTL,
-          actual: I18nManager.isRTL,
-        });
+        if (!hasLoggedRTLMismatch) {
+          console.log('[Language] RTL mismatch on init:', {
+            expected: isRTL,
+            actual: I18nManager.isRTL,
+          });
+          hasLoggedRTLMismatch = true;
+        }
         I18nManager.forceRTL(isRTL);
       }
 

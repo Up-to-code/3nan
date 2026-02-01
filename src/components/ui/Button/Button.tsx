@@ -38,7 +38,9 @@ export function Button({
   const handlePress = () => {
     if (disabled) return;
     if (hapticType !== 'none') {
-      trigger(hapticType).then(() => onPress());
+      trigger(hapticType)
+        .catch(() => {})
+        .finally(() => onPress());
     } else {
       onPress();
     }

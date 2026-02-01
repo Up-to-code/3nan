@@ -25,4 +25,10 @@ export default defineSchema({
   })
     .index('by_user', ['userId'])
     .index('by_token', ['token']),
+
+  rateLimitCheckEmail: defineTable({
+    key: v.string(),
+    count: v.number(),
+    windowEnd: v.number(),
+  }).index('by_key', ['key']),
 });
