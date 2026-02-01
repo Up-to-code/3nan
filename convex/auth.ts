@@ -1,63 +1,54 @@
-import { query, mutation } from './_generated/server';
-import { v } from 'convex/values';
+import { createClient, type GenericCtx } from "@convex-dev/better-auth";
+import { convex } from "@convex-dev/better-auth/plugins";
+import { betterAuth, type BetterAuthOptions } from "better-auth/minimal";
+import { expo } from '@better-auth/expo'
+import { components } from "./_generated/api";
+import { DataModel } from "./_generated/dataModel";
+import { query } from "./_generated/server";
+import { v } from "convex/values";
+import authConfig from "./auth.config";
 
-// Get user by email
-export const getUserByEmail = query({
+// The component client has methods needed for integrating Convex with Better Auth,
+// as well as helper methods for general use.
+export const authComponent = createClient<DataModel>(components.betterAuth);
+
+export const createAuth = (ctx: GenericCtx<DataModel>) => {
+  return betterAuth({
+    trustedOrigins: [
+      "3nan://",   // Production app scheme
+      "exp://*",   // Expo dev client (any IP/port, no path)
+    ],
+    database: authComponent.adapter(ctx),
+    // Configure simple, non-verified email/password to get started
+    emailAndPassword: {
+      enabled: true,
+      requireEmailVerification: false,
+    },
+    plugins: [
+      // The Expo and Convex plugins are required
+      expo(),
+      convex({ authConfig }),
+    ],
+  })
+}
+// Example function for getting the current user
+// Feel free to edit, omit, etc.
+export const getCurrentUser = query({
+  args: {},
+  handler: async (ctx) => {
+    return authComponent.getAuthUser(ctx);
+  },
+});
+
+/** Public query: returns true if a user with this email exists (for email-first auth flow). */
+export const checkEmailExists = query({
   args: { email: v.string() },
   handler: async (ctx, { email }) => {
-    return await ctx.db
-      .query('users')
-      .withIndex('by_email', (q) => q.eq('email', email))
+    const normalized = email.trim().toLowerCase();
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", normalized))
       .first();
-  },
-});
-
-// Create or update user on sign in
-export const upsertUser = mutation({
-  args: {
-    email: v.string(),
-    name: v.string(),
-    avatar: v.optional(v.string()),
-    provider: v.union(
-      v.literal('google'),
-      v.literal('apple'),
-      v.literal('email')
-    ),
-  },
-  handler: async (ctx, { email, name, avatar, provider }) => {
-    const existingUser = await ctx.db
-      .query('users')
-      .withIndex('by_email', (q) => q.eq('email', email))
-      .first();
-
-    const now = Date.now();
-
-    if (existingUser) {
-      // Update last login
-      await ctx.db.patch(existingUser._id, {
-        lastLoginAt: now,
-        name,
-        avatar,
-      });
-      return existingUser._id;
-    }
-
-    // Create new user
-    return await ctx.db.insert('users', {
-      email,
-      name,
-      avatar,
-      provider,
-      createdAt: now,
-      lastLoginAt: now,
-    });
-  },
-});
-
-// Get current user by ID
-export const getUser = query({
-  args: { userId: v.id('users') },
-  handler: async (ctx, { userId }) => {
-    return await ctx.db.get(userId);
+    return user !== null;
   },
 });

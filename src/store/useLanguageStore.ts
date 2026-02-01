@@ -1,8 +1,7 @@
 import { create } from 'zustand';
-import { I18nManager } from 'react-native';
+import { Alert, I18nManager } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Localization from 'expo-localization';
-import Toast from 'react-native-toast-message';
 import i18n from '../locales';
 import type { SupportedLanguage } from '../locales';
 
@@ -31,17 +30,13 @@ function getSystemLanguage(): SupportedLanguage {
   }
 }
 
-function showRestartToast(isRTL: boolean): void {
-  console.log('[Language] Showing restart toast, isRTL:', isRTL);
-  Toast.show({
-    type: 'info',
-    text1: isRTL ? 'تم تغيير اللغة' : 'Language Changed',
-    text2: isRTL
-      ? 'يرجى إغلاق التطبيق وإعادة فتحه'
-      : 'Please close and reopen the app',
-    position: 'bottom',
-    visibilityTime: 4000,
-  });
+function showRestartAlert(isRTL: boolean): void {
+  console.log('[Language] Showing restart alert, isRTL:', isRTL);
+  const title = isRTL ? 'تم تغيير اللغة' : 'Language Changed';
+  const message = isRTL
+    ? 'يرجى إغلاق التطبيق وإعادة فتحه'
+    : 'Please close and reopen the app';
+  Alert.alert(title, message);
 }
 
 interface LanguageState {
@@ -85,7 +80,7 @@ export const useLanguageStore = create<LanguageState>((set) => ({
           expected: isRTL,
           actual: I18nManager.isRTL,
         });
-        showRestartToast(isRTL);
+        showRestartAlert(isRTL);
       } else {
         console.log('[Language] Language changed, no restart needed');
       }
