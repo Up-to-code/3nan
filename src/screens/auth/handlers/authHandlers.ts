@@ -64,7 +64,11 @@ export async function handleAppleAuth(router: Router): Promise<void> {
     throw createError([ERROR_CODES.SERVER_NOT_CONFIGURED]);
   }
 
-  const data = await authClient.signIn.social({ provider: 'apple' });
+  const { data, error } = await authClient.signIn.social({ provider: 'apple' });
+
+  if (error) {
+    throw createError([ERROR_CODES.AUTH_FAILED]);
+  }
 
   if (!data) {
     throw createError([ERROR_CODES.AUTH_NO_DATA]);
@@ -82,7 +86,11 @@ export async function handleGoogleAuth(router: Router): Promise<void> {
     throw createError([ERROR_CODES.SERVER_NOT_CONFIGURED]);
   }
 
-  const data = await authClient.signIn.social({ provider: 'google' });
+  const { data, error } = await authClient.signIn.social({ provider: 'google' });
+
+  if (error) {
+    throw createError([ERROR_CODES.AUTH_FAILED]);
+  }
 
   if (!data) {
     throw createError([ERROR_CODES.AUTH_NO_DATA]);
