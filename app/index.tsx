@@ -1,12 +1,26 @@
-import React from 'react';
-import { Redirect } from 'expo-router';
+import React, { useEffect } from 'react';
+import { useRouter, useRootNavigationState } from 'expo-router';
 import { authClient } from '@/lib/auth-client';
 import { LoadingView, ErrorView } from '@/shared/components';
 
 export default function Index() {
+  const router = useRouter();
+  const navigationState = useRootNavigationState();
   const { data: session, isPending, error, refetch } = authClient.useSession();
 
-  if (isPending) {
+  useEffect(() => {
+    // Wait for navigator to be ready
+    if (!navigationState?.key) return;
+    if (isPending) return;
+
+    if (session) {
+      router.replace('/(main)/home');
+    } else {
+      router.replace('/(auth)');
+    }
+  }, [navigationState?.key, isPending, session, router]);
+
+  if (isPending || !navigationState?.key) {
     return <LoadingView />;
   }
 
@@ -14,9 +28,5 @@ export default function Index() {
     return <ErrorView message={error.message} onRetry={refetch} />;
   }
 
-  if (session) {
-    return <Redirect href="/(main)/home" />;
-  }
-
-  return <Redirect href="/(auth)" />;
+  return <LoadingView />;
 }
