@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import { cancelAnimation, withSpring, runOnJS, ReduceMotion } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import {
@@ -7,15 +8,8 @@ import {
   loopSilentMotion,
 } from '../motions';
 import type { MotionContext } from '../motions';
-import { APPLE_SPRING_SNAPPY } from '../Avatar.constants';
-import {
-  LISTENING_SIZE_MIN,
-  LISTENING_SIZE_MAX,
-  SPEAKING_SIZE_MIN,
-  SPEAKING_SIZE_MAX,
-  SILENT_SIZE_MIN,
-  SILENT_SIZE_MAX,
-} from '../Avatar.constants';
+import type { BreathingSizeRange } from '../motions';
+import { APPLE_SPRING_SNAPPY, getAvatarRanges } from '../Avatar.constants';
 
 const SPRING = { ...APPLE_SPRING_SNAPPY, reduceMotion: ReduceMotion.System };
 
@@ -32,12 +26,6 @@ export interface UseAvatarStateReturn {
   currentState: AvatarStateType;
 }
 
-const RANGES = {
-  listening: { min: LISTENING_SIZE_MIN, max: LISTENING_SIZE_MAX },
-  speaking: { min: SPEAKING_SIZE_MIN, max: SPEAKING_SIZE_MAX },
-  silent: { min: SILENT_SIZE_MIN, max: SILENT_SIZE_MAX },
-} as const;
-
 const MOTIONS = {
   listening: loopListeningMotion,
   speaking: loopSpeakingMotion,
@@ -46,25 +34,38 @@ const MOTIONS = {
 
 export function useAvatarState(options: UseAvatarStateOptions): UseAvatarStateReturn {
   const { size, translateY, scale } = options;
+  const { width: screenWidth } = useWindowDimensions();
   const [currentState, setCurrentState] = useState<AvatarStateType>('speaking');
   const ctx: MotionContext = { size, translateY, scale };
+  const ranges = useMemo(() => getAvatarRanges(screenWidth), [screenWidth]);
 
   const setState = useCallback(
     (state: AvatarStateType) => {
       setCurrentState(state);
       cancelAnimation(size);
-      const range = RANGES[state];
-      const startLoop = () => MOTIONS[state](ctx);
-      size.value = withSpring(
-        range.min,
-        SPRING,
-        (finished) => {
-          'worklet';
-          if (finished) runOnJS(startLoop)();
+      cancelAnimation(scale);
+      const range = ranges[state];
+      const startLoop = () => {
+        if (state === 'silent') {
+          loopSilentMotion(ctx, range);
+        } else {
+          MOTIONS[state](ctx, range);
         }
-      );
+      };
+      if (state === 'silent') {
+        startLoop();
+      } else {
+        size.value = withSpring(
+          range.min,
+          SPRING,
+          (finished) => {
+            'worklet';
+            if (finished) runOnJS(startLoop)();
+          }
+        );
+      }
     },
-    [size, translateY, scale]
+    [size, translateY, scale, ranges]
   );
 
   return { setState, currentState };
