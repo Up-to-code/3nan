@@ -3,6 +3,7 @@
     "name": "3nan",
     "slug": "3nan",
     "version": "1.0.0",
+    "runtimeVersion": "1.0.0",
     "scheme": "3nan",
     "orientation": "portrait",
     "icon": "./assets/icons/3nan-icon.png",
@@ -15,7 +16,7 @@
     
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.3nan.app"
+      "bundleIdentifier": "com.threenan.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +25,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.3nan.app"
+      "package": "com.threenan.app"
     },
     "web": {
       "favicon": "./assets/icons/3nan-icon.png",
