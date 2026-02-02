@@ -12,13 +12,14 @@ export default function Index() {
     // Wait for navigator to be ready
     if (!navigationState?.key) return;
     if (isPending) return;
+    if (error) return;
 
     if (session) {
       router.replace('/(main)/home');
     } else {
       router.replace('/(auth)');
     }
-  }, [navigationState?.key, isPending, session, router]);
+  }, [navigationState?.key, isPending, session, error, router]);
 
   if (isPending || !navigationState?.key) {
     return <LoadingView />;

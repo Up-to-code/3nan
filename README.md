@@ -29,6 +29,7 @@ bun run start
 - **Navigation:** Expo Router with `Stack.Protected` for private/public screens and RTL-aware slide animations; see `.cursor/rules/performance.mdc` for patterns
 - **Haptics:** `useHapticFeedback()` hook and Button `hapticType` for tap feedback (e.g. selection on iOS)
 - **No toasts:** Auth errors shown as inline labels; language restart uses Alert
+- **TOON:** `@toon-format/toon` is used for Token-Oriented Object Notation (TOON) encoding/decoding of LLM prompt responses into avatar motion timelines (token-efficient format)
 
 ## 💡 Recommendations
 

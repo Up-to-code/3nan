@@ -36,15 +36,15 @@ function createError(
   return error;
 }
 
-/** Navigate to index so index can redirect to (main)/home when session is ready. Retries once after 100ms on failure. */
+/** Navigate directly to (main)/home after successful auth. Retries once after 100ms on failure. */
 async function redirectAfterAuth(router: Router): Promise<void> {
   try {
-    router.replace('/');
+    router.replace('/(main)/home');
   } catch (err) {
     console.warn('[Auth] Redirect failed:', err);
     await new Promise((r) => setTimeout(r, 100));
     try {
-      router.replace('/');
+      router.replace('/(main)/home');
     } catch (e2) {
       throw err;
     }

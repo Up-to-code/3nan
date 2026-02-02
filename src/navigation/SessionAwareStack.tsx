@@ -14,10 +14,6 @@ export function SessionAwareStack() {
     }
   }, [isPending]);
 
-  if (isPending) {
-    return null;
-  }
-
   return (
     <Stack
       screenOptions={{

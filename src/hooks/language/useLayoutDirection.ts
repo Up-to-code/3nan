@@ -1,4 +1,4 @@
-import { useLanguageStore } from '../store/useLanguageStore';
+import { useLanguageStore } from '../../store/useLanguageStore';
 
 export type LayoutDirection = 'rtl' | 'ltr';
 
