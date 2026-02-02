@@ -87,17 +87,31 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
     onContentOpacityReady?.(contentOpacity);
   }, [contentOpacity, onContentOpacityReady]);
 
-  useImperativeHandle(ref, () => ({
-    transitionToViewerContent,
-    transitionToAssistantView,
-    playHappy,
-    playSad,
-    playCalm,
-    playEmotion,
-    setState,
-    scheduleFromTimeline,
-    contentOpacity,
-  }));
+  useImperativeHandle(
+    ref,
+    () => ({
+      transitionToViewerContent,
+      transitionToAssistantView,
+      playHappy,
+      playSad,
+      playCalm,
+      playEmotion,
+      setState,
+      scheduleFromTimeline,
+      contentOpacity,
+    }),
+    [
+      transitionToViewerContent,
+      transitionToAssistantView,
+      playHappy,
+      playSad,
+      playCalm,
+      playEmotion,
+      setState,
+      scheduleFromTimeline,
+      contentOpacity,
+    ]
+  );
 
   useEffect(() => {
     lineVisible.value = withTiming(lineShown ? 1 : 0, {
