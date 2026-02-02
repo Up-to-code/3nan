@@ -105,7 +105,7 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
       easing: Easing.out(Easing.ease),
       reduceMotion: ReduceMotion.System,
     });
-  }, [lineShown]);
+  }, [lineShown, lineVisible]);
 
   const onDoubleTap = useCallback(() => {
     const now = Date.now();
@@ -135,7 +135,10 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
     [pauseBreathing, resumeBreathing]
   );
 
-  const composedGesture = Gesture.Simultaneous(doubleTapGesture, touchGesture);
+  const composedGesture = useMemo(
+    () => Gesture.Simultaneous(doubleTapGesture, touchGesture),
+    [doubleTapGesture, touchGesture]
+  );
 
   const circleAnimatedStyle = useAnimatedStyle(() => ({
     width: size.value,
