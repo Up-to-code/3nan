@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   cancelAnimation,
   withTiming,
@@ -46,6 +46,7 @@ export function useTransitionMotions(
   const { insets, contentCenterY } = useMotionScreen();
 
   const ctx = { size, translateY, scale };
+  const onCompleteRef = useRef<(() => void) | undefined>(undefined);
 
   useEffect(() => {
     transitionToAssistantViewMotion(ctx);
@@ -74,13 +75,15 @@ export function useTransitionMotions(
     transitionToViewerContentMotion(ctx, targetTranslateY, onCircleComplete);
   }, [insets.top, contentCenterY, parentCenterY, contentOpacity]);
 
-  const onFadeComplete = useCallback((complete?: () => void) => {
+  const onFadeComplete = useCallback(() => {
     transitionToAssistantViewMotion(ctx);
-    complete?.();
+    onCompleteRef.current?.();
+    onCompleteRef.current = undefined;
   }, []);
 
   const transitionToAssistantView = useCallback(
     (onComplete?: () => void) => {
+      onCompleteRef.current = onComplete;
       cancelAnimation(contentOpacity);
       contentOpacity.value = withTiming(
         0,
@@ -92,7 +95,7 @@ export function useTransitionMotions(
         (finished) => {
           'worklet';
           if (finished) {
-            runOnJS(onFadeComplete)(onComplete);
+            runOnJS(onFadeComplete)();
           }
         }
       );
