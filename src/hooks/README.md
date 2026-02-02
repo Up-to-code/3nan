@@ -6,7 +6,7 @@ Global React hooks organized by category. Each folder has a single purpose: when
 
 ## Structure
 
-```
+```text
 hooks/
 ├── README.md           # This file – overview and navigation
 ├── index.ts            # Barrel export (re-exports all hooks)

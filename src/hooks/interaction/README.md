@@ -6,7 +6,7 @@ Hooks for tactile and haptic feedback. Use when you need to trigger haptic feedb
 
 ## Folder structure
 
-```
+```text
 interaction/
 ├── README.md
 ├── index.ts

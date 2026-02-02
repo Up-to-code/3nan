@@ -3,7 +3,7 @@ import { decode } from '@toon-format/toon';
 import type { ParsedToonTimeline } from './types';
 
 export interface UseToneParseReturn {
-  parse: (toon: string) => unknown;
+  parse: (toon: string) => unknown | null;
   error: Error | null;
   clearError: () => void;
 }
@@ -15,7 +15,7 @@ export interface UseToneParseReturn {
 export function useToneParse(): UseToneParseReturn {
   const [error, setError] = useState<Error | null>(null);
 
-  const parse = useCallback((toon: string): unknown => {
+  const parse = useCallback((toon: string): unknown | null => {
     setError(null);
     try {
       const result = decode(toon, { strict: false });

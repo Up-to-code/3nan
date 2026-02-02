@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Platform } from 'react-native';
-import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import * as Haptics from 'expo-haptics';
 
 export type HapticFeedbackType =
@@ -19,7 +19,7 @@ export interface UseHapticFeedbackReturn {
 }
 
 async function triggerHaptic(type: HapticFeedbackType): Promise<void> {
-  if (Platform.OS === 'ios' && !Constants.isDevice) {
+  if (Platform.OS === 'ios' && !Device.isDevice) {
     return;
   }
   try {

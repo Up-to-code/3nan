@@ -6,7 +6,7 @@ Hooks for screen dimensions, breakpoints, and responsive calculations. Use when 
 
 ## Folder structure
 
-```
+```text
 screen/
 ├── README.md
 ├── index.ts

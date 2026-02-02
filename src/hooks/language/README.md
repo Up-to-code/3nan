@@ -6,7 +6,7 @@ Hooks for translation (i18n), RTL detection, and layout direction. Use when you 
 
 ## Folder structure
 
-```
+```text
 language/
 ├── README.md
 ├── index.ts

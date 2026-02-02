@@ -3,6 +3,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useEffect,
+  useMemo,
   useState,
   useRef,
 } from 'react';
@@ -116,15 +117,23 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
     setLineShown((prev) => !prev);
   }, [trigger]);
 
-  const doubleTapGesture = Gesture.Tap()
-    .numberOfTaps(2)
-    .maxDuration(300)
-    .onStart(() => runOnJS(onDoubleTap)());
+  const doubleTapGesture = useMemo(
+    () =>
+      Gesture.Tap()
+        .numberOfTaps(2)
+        .maxDuration(300)
+        .onStart(() => runOnJS(onDoubleTap)()),
+    [onDoubleTap]
+  );
 
-  const touchGesture = Gesture.Pan()
-    .minPointers(1)
-    .onStart(() => runOnJS(pauseBreathing)())
-    .onFinalize(() => runOnJS(resumeBreathing)());
+  const touchGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .minPointers(1)
+        .onStart(() => runOnJS(pauseBreathing)())
+        .onFinalize(() => runOnJS(resumeBreathing)()),
+    [pauseBreathing, resumeBreathing]
+  );
 
   const composedGesture = Gesture.Simultaneous(doubleTapGesture, touchGesture);
 

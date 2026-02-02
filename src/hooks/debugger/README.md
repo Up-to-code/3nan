@@ -6,7 +6,7 @@ Hooks for debugging: FPS, memory, and performance metrics. Use when you need to 
 
 ## Folder structure
 
-```
+```text
 debugger/
 ├── README.md
 ├── index.ts

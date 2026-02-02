@@ -6,7 +6,7 @@ Hooks for parsing TOON (Token-Oriented Object Notation) strings from LLM respons
 
 ## Folder structure
 
-```
+```text
 tone/
 ├── README.md
 ├── index.ts
@@ -28,7 +28,7 @@ tone/
 
 ## TOON schema (for LLM prompt)
 
-```
+```text
 states[N]{st,f,to}:  st=listen|speak|idle, f=fromMs, to=toMs
 emotions[N]{e,f,to}: e=h|s|c|n (happy|sad|calm|neutral), f=fromMs, to=toMs
 
