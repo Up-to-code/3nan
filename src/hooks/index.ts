@@ -21,6 +21,7 @@ export {
   type UseDebugPerformanceOptions,
 } from './debugger';
 export { useHapticFeedback, type HapticFeedbackType } from './interaction';
+export { usePlatform } from './platform';
 export {
   useToneParse,
   useToneToTimeline,
