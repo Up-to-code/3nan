@@ -5,7 +5,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   useDerivedValue,
-  useAnimatedReaction,
   withSpring,
   runOnJS,
   ReduceMotion,
@@ -23,40 +22,22 @@ const VELOCITY_THRESHOLD = 150;
 const EDGE_WIDTH_RATIO = 0.1;
 const ACTIVE_OFFSET_X = 6;
 
-export interface UseMenuSwipeOptions {
-  onMotionComplete?: () => void;
-}
-
-export function useMenuSwipe(isRTL: boolean, options?: UseMenuSwipeOptions) {
-  const { onMotionComplete } = options ?? {};
+export function useMenuSwipe(isRTL: boolean) {
   const { width: screenWidth } = Dimensions.get('window');
   const edgeWidth = screenWidth * EDGE_WIDTH_RATIO;
   const translateX = useSharedValue(0);
   const baseOffset = useSharedValue(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const motionCallback = useCallback(
-    (finished?: boolean) => {
-      if (finished && onMotionComplete) onMotionComplete();
-    },
-    [onMotionComplete]
-  );
-
   const open = useCallback(() => {
-    translateX.value = withSpring(
-      isRTL ? -screenWidth : screenWidth,
-      SPRING,
-      onMotionComplete ? (f) => runOnJS(motionCallback)(f) : undefined
-    );
-  }, [isRTL, screenWidth, onMotionComplete, motionCallback]);
+    setIsMenuOpen(true);
+    translateX.value = withSpring(isRTL ? -screenWidth : screenWidth, SPRING);
+  }, [isRTL, screenWidth]);
 
   const close = useCallback(() => {
-    translateX.value = withSpring(
-      0,
-      SPRING,
-      onMotionComplete ? (f) => runOnJS(motionCallback)(f) : undefined
-    );
-  }, [onMotionComplete, motionCallback]);
+    setIsMenuOpen(false);
+    translateX.value = withSpring(0, SPRING);
+  }, []);
 
   const panGesture = useMemo(
     () =>
@@ -85,13 +66,10 @@ export function useMenuSwipe(isRTL: boolean, options?: UseMenuSwipeOptions) {
             (isRTL ? current < -threshold : current > threshold) ||
             velocity > VELOCITY_THRESHOLD;
           const toValue = shouldOpen ? (isRTL ? -screenWidth : screenWidth) : 0;
-          translateX.value = withSpring(
-            toValue,
-            SPRING,
-            onMotionComplete ? (f) => runOnJS(motionCallback)(f) : undefined
-          );
+          translateX.value = withSpring(toValue, SPRING);
+          runOnJS(setIsMenuOpen)(shouldOpen);
         }),
-    [isRTL, screenWidth, onMotionComplete, motionCallback]
+    [isRTL, screenWidth]
   );
 
   const closePanGesture = useMemo(
@@ -121,13 +99,10 @@ export function useMenuSwipe(isRTL: boolean, options?: UseMenuSwipeOptions) {
             (isRTL ? current > -threshold : current < threshold) ||
             velocity < -VELOCITY_THRESHOLD;
           const toValue = shouldClose ? 0 : (isRTL ? -screenWidth : screenWidth);
-          translateX.value = withSpring(
-            toValue,
-            SPRING,
-            onMotionComplete ? (f) => runOnJS(motionCallback)(f) : undefined
-          );
+          translateX.value = withSpring(toValue, SPRING);
+          runOnJS(setIsMenuOpen)(!shouldClose);
         }),
-    [isRTL, screenWidth, onMotionComplete, motionCallback]
+    [isRTL, screenWidth]
   );
 
   const mainAnimatedStyle = useAnimatedStyle(() => ({
@@ -138,15 +113,6 @@ export function useMenuSwipe(isRTL: boolean, options?: UseMenuSwipeOptions) {
     const raw = isRTL ? -translateX.value / screenWidth : translateX.value / screenWidth;
     return interpolate(raw, [0, 1], [0, 1], Extrapolation.CLAMP);
   }, [isRTL, screenWidth]);
-
-  useAnimatedReaction(
-    () => {
-      const raw = isRTL ? -translateX.value / screenWidth : translateX.value / screenWidth;
-      return raw > 0.5;
-    },
-    (open) => runOnJS(setIsMenuOpen)(open),
-    [isRTL, screenWidth]
-  );
 
   return {
     panGesture,

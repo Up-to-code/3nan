@@ -4,7 +4,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme';
-import { useHapticFeedback, useIsRTL } from '@/hooks';
+import { useIsRTL } from '@/hooks';
 import { Avatar, type AvatarRef } from './components/Avatar';
 import { useAvatarInteraction } from './components/Avatar/hooks';
 import { ViewerContentLayout } from './components/ViewerContentLayout';
@@ -15,11 +15,9 @@ export function HomeScreen() {
   const avatarRef = useRef<AvatarRef>(null);
   const insets = useSafeAreaInsets();
   const { isRTL } = useIsRTL();
-  const { trigger } = useHapticFeedback();
   const [isViewerContent, setIsViewerContent] = useState(false);
-  const onMotionComplete = useCallback(() => trigger('light'), [trigger]);
   const { panGesture, closePanGesture, mainAnimatedStyle, close, edgeWidth, isMenuOpen } =
-    useMenuSwipe(isRTL, { onMotionComplete });
+    useMenuSwipe(isRTL);
   useAvatarInteraction({ avatarRef, setIsViewerContent });
   const [avatarParentCenterY, setAvatarParentCenterY] = useState<number | undefined>();
   const [contentOpacity, setContentOpacity] = useState<

@@ -1,10 +1,8 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { BlurView } from 'expo-blur';
-import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing } from '@/theme';
-import { useHapticFeedback, useLayoutDirection, usePlatform } from '@/hooks';
+import { useHapticFeedback, useLayoutDirection } from '@/hooks';
 import { MenuItemList } from './components';
 import { styles } from './MenuScreen.styles';
 
@@ -15,11 +13,10 @@ interface MenuScreenProps {
 export function MenuScreen({ onClose }: MenuScreenProps) {
   const { trigger } = useHapticFeedback();
   const { rowDirection, alignStart } = useLayoutDirection();
-  const { isIOS } = usePlatform();
 
   const handleClose = () => {
     trigger('selection');
-    onClose();
+    requestAnimationFrame(() => onClose());
   };
 
   const closeButton = (
@@ -34,18 +31,9 @@ export function MenuScreen({ onClose }: MenuScreenProps) {
     </Pressable>
   );
 
-  const closeButtonWrapped =
-    isIOS && isLiquidGlassAvailable() ? (
-      <GlassView glassEffectStyle="regular" style={styles.closeCircle}>
-        {closeButton}
-      </GlassView>
-    ) : isIOS ? (
-      <BlurView intensity={50} tint="light" style={styles.closeCircle}>
-        {closeButton}
-      </BlurView>
-    ) : (
-      <View style={[styles.closeCircle, styles.closeCircleFallback]}>{closeButton}</View>
-    );
+  const closeButtonWrapped = (
+    <View style={[styles.closeCircle, styles.closeCircleFallback]}>{closeButton}</View>
+  );
 
   return (
     <View style={styles.container}>
