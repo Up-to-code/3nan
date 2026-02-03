@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
+import { useWindowDimensions } from 'react-native';
 import { useSharedValue, cancelAnimation } from 'react-native-reanimated';
-import { OPENING_SIZE } from '../Avatar.constants';
+import { OPENING_SIZE, getAvatarBaseSize } from '../Avatar.constants';
 import {
   loopBreathingMotion,
   loopHappyMotion,
@@ -10,12 +11,6 @@ import {
 } from '../motions';
 import type { BreathingSizeRange } from '../motions';
 import type { EmotionCode } from '../motions';
-import {
-  ASSISTANT_VIEW_SIZE,
-  BREATH_SIZE,
-  VIEWER_CONTENT_CIRCLE_MIN,
-  VIEWER_CONTENT_CIRCLE_MAX,
-} from '../Avatar.constants';
 
 export interface UseAvatarLoopMotionsReturn {
   size: ReturnType<typeof useSharedValue<number>>;
@@ -31,12 +26,9 @@ export interface UseAvatarLoopMotionsReturn {
   playEmotion: (code: EmotionCode) => void;
 }
 
-const ASSISTANT_BREATHING_RANGE: BreathingSizeRange = {
-  min: ASSISTANT_VIEW_SIZE,
-  max: BREATH_SIZE,
-};
-
 export function useAvatarLoopMotions(): UseAvatarLoopMotionsReturn {
+  const { width: screenWidth } = useWindowDimensions();
+  const baseSize = getAvatarBaseSize(screenWidth);
   const size = useSharedValue(OPENING_SIZE);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
@@ -47,13 +39,14 @@ export function useAvatarLoopMotions(): UseAvatarLoopMotionsReturn {
 
   const pauseBreathing = useCallback(() => {
     cancelAnimation(size);
-  }, [size]);
+    cancelAnimation(scale);
+  }, [size, scale]);
 
   const resumeBreathing = useCallback(
-    (range: BreathingSizeRange = ASSISTANT_BREATHING_RANGE) => {
-      loopBreathingMotion(ctx, range);
+    (range?: BreathingSizeRange) => {
+      loopBreathingMotion(ctx, range ?? { min: baseSize, max: baseSize });
     },
-    []
+    [baseSize]
   );
 
   const playHappy = useCallback(() => {

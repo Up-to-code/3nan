@@ -1,9 +1,15 @@
-import { loopBreathingMotion } from '../avatar';
+import { cancelAnimation } from 'react-native-reanimated';
 import type { MotionContext } from '../types';
-import { SILENT_SIZE_MIN, SILENT_SIZE_MAX } from '../../Avatar.constants';
+import type { BreathingSizeRange } from '../avatar';
+import { ASSISTANT_VIEW_SIZE } from '../../Avatar.constants';
 
-const SILENT_RANGE = { min: SILENT_SIZE_MIN, max: SILENT_SIZE_MAX };
-
-export function loopSilentMotion(ctx: MotionContext): void {
-  loopBreathingMotion(ctx, SILENT_RANGE);
+export function loopSilentMotion(
+  ctx: MotionContext,
+  range?: BreathingSizeRange
+): void {
+  const { size, scale } = ctx;
+  cancelAnimation(size);
+  cancelAnimation(scale);
+  size.value = range?.min ?? ASSISTANT_VIEW_SIZE;
+  scale.value = 1;
 }

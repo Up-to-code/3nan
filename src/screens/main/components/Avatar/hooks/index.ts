@@ -23,3 +23,7 @@ export {
   type UseEmotionSchedulerReturn,
   type UseEmotionSchedulerOptions,
 } from './useEmotionScheduler';
+export {
+  useAvatarInteraction,
+  type UseAvatarInteractionOptions,
+} from './useAvatarInteraction';

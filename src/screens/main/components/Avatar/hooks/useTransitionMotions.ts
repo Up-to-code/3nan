@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useWindowDimensions } from 'react-native';
 import {
   cancelAnimation,
   withTiming,
@@ -10,6 +11,7 @@ import type { SharedValue } from 'react-native-reanimated';
 import { useMotionScreen } from '@/hooks';
 import {
   getViewerContentTranslateY,
+  getAvatarBaseSize,
   VIEWER_CONTENT_CIRCLE_MIN,
   VIEWER_CONTENT_CIRCLE_MAX,
   CONTENT_FADE_DURATION,
@@ -43,14 +45,16 @@ export function useTransitionMotions(
   options: UseTransitionMotionsOptions
 ): UseTransitionMotionsReturn {
   const { size, translateY, scale, contentOpacity, parentCenterY } = options;
+  const { width: screenWidth } = useWindowDimensions();
   const { insets, contentCenterY } = useMotionScreen();
+  const baseSize = getAvatarBaseSize(screenWidth);
 
   const ctx = { size, translateY, scale };
   const onCompleteRef = useRef<(() => void) | undefined>(undefined);
 
   useEffect(() => {
-    transitionToAssistantViewMotion(ctx);
-  }, []);
+    transitionToAssistantViewMotion(ctx, baseSize);
+  }, [baseSize]);
 
   const transitionToViewerContent = useCallback(() => {
     cancelAnimation(contentOpacity);
@@ -76,10 +80,10 @@ export function useTransitionMotions(
   }, [insets.top, contentCenterY, parentCenterY, contentOpacity]);
 
   const onFadeComplete = useCallback(() => {
-    transitionToAssistantViewMotion(ctx);
+    transitionToAssistantViewMotion(ctx, baseSize);
     onCompleteRef.current?.();
     onCompleteRef.current = undefined;
-  }, []);
+  }, [baseSize]);
 
   const transitionToAssistantView = useCallback(
     (onComplete?: () => void) => {
