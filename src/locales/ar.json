@@ -55,6 +55,10 @@
     "arabic": "العربية",
     "english": "English"
   },
+  "subscription": {
+    "free": "مجاني",
+    "pro": "برو"
+  },
   "common": {
     "loading": "جاري التحميل…",
     "errorSomethingWrong": "حدث خطأ ما",
