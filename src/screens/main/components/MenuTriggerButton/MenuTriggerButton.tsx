@@ -6,7 +6,7 @@ import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme';
 import { useHapticFeedback } from '@/hooks';
-import { styles } from './MenuTriggerButton.styles';
+import { styles, HIT_SLOP } from './MenuTriggerButton.styles';
 
 interface MenuTriggerButtonProps {
   onPress: () => void;
@@ -36,7 +36,7 @@ export function MenuTriggerButton({ onPress, menuProgress }: MenuTriggerButtonPr
       onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel="Toggle menu"
-      hitSlop={styles.hitSlop}
+      hitSlop={HIT_SLOP}
       style={styles.pressable}
     >
       <Animated.View style={menuIconStyle}>

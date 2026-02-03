@@ -24,6 +24,8 @@ export function MenuItemList() {
           key={item.id}
           style={({ pressed }) => [styles.item, pressed && { opacity: 0.7 }]}
           onPress={() => trigger('selection')}
+          accessibilityRole="button"
+          accessibilityLabel={item.label}
         >
           <Ionicons name={item.icon} size={22} color={colors.text.secondary} />
           <Text style={styles.itemText}>{item.label}</Text>
