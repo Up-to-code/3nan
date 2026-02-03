@@ -1,0 +1,1 @@
+export { HomeGestureStrips } from './HomeGestureStrips';

@@ -1,3 +1,10 @@
+/**
+ * WHY: listening/speaking/silent state and motion switching.
+ * HOW: setState cancels current, springs to range.min, then starts loop.
+ * EDIT: Add new state: add motion in motions/states, add to MOTIONS map.
+ * RELATED: motions/states, useAvatarMotions, config/avatarRoles
+ */
+
 import { useCallback, useMemo, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { cancelAnimation, withSpring, runOnJS, ReduceMotion } from 'react-native-reanimated';
@@ -9,11 +16,12 @@ import {
 } from '../motions';
 import type { MotionContext } from '../motions';
 import type { BreathingSizeRange } from '../motions';
-import { APPLE_SPRING_SNAPPY, getAvatarRanges } from '../Avatar.constants';
+import type { AvatarStateType } from '../config/types';
+import { APPLE_SPRING_SNAPPY, getAvatarRanges } from '../config/constants';
 
 const SPRING = { ...APPLE_SPRING_SNAPPY, reduceMotion: ReduceMotion.System };
 
-export type AvatarStateType = 'listening' | 'speaking' | 'silent';
+export type { AvatarStateType };
 
 export interface UseAvatarStateOptions {
   size: SharedValue<number>;

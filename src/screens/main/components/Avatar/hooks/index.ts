@@ -27,3 +27,12 @@ export {
   useAvatarInteraction,
   type UseAvatarInteractionOptions,
 } from './useAvatarInteraction';
+export {
+  useAvatarGestures,
+  type UseAvatarGesturesReturn,
+  type UseAvatarGesturesOptions,
+} from './useAvatarGestures';
+export {
+  useAvatarLineVisibility,
+  type UseAvatarLineVisibilityOptions,
+} from './useAvatarLineVisibility';

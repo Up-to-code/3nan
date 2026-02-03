@@ -1,7 +1,14 @@
+/**
+ * WHY: SharedValues and loop/emotion motion triggers for Avatar.
+ * HOW: Creates size, translateY, scale, etc.; exposes pause/resume, playHappy, etc.
+ * EDIT: Add new emotion: add to motions/emotions, add playX here.
+ * RELATED: motions/breathing, motions/emotions, useAvatarMotions, useTransitionMotions
+ */
+
 import { useCallback } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSharedValue, cancelAnimation } from 'react-native-reanimated';
-import { OPENING_SIZE, getAvatarBaseSize } from '../Avatar.constants';
+import { OPENING_SIZE, getAvatarBaseSize } from '../config/constants';
 import {
   loopBreathingMotion,
   loopHappyMotion,

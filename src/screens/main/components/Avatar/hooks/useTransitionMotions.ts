@@ -1,3 +1,10 @@
+/**
+ * WHY: One-time transitions (viewer content <-> assistant view).
+ * HOW: Springs size/translateY; fades contentOpacity; starts breathing on complete.
+ * EDIT: Change target sizes in config/constants; motion in motions/transitions.
+ * RELATED: motions/transitions, useAvatarMotions, config/constants
+ */
+
 import { useCallback, useEffect, useRef } from 'react';
 import { useWindowDimensions } from 'react-native';
 import {
@@ -15,7 +22,7 @@ import {
   VIEWER_CONTENT_CIRCLE_MIN,
   VIEWER_CONTENT_CIRCLE_MAX,
   CONTENT_FADE_DURATION,
-} from '../Avatar.constants';
+} from '../config/constants';
 import {
   transitionToViewerContentMotion,
   transitionToAssistantViewMotion,

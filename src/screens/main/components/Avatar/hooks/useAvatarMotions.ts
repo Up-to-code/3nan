@@ -1,3 +1,10 @@
+/**
+ * WHY: Composes all Avatar motion hooks (loop, transitions, state, emotion scheduler).
+ * HOW: Returns unified API for Avatar.tsx and parent screens.
+ * EDIT: Add new motion source: add hook, compose here.
+ * RELATED: useAvatarLoopMotions, useTransitionMotions, useAvatarState, useEmotionScheduler
+ */
+
 import type { MotionTimeline } from '@/hooks/tone';
 import { useAvatarLoopMotions } from './useAvatarLoopMotions';
 import { useTransitionMotions } from './useTransitionMotions';

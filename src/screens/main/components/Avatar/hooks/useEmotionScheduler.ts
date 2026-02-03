@@ -1,6 +1,13 @@
+/**
+ * WHY: Schedules state changes and emotion bursts from MotionTimeline.
+ * HOW: setTimeout per segment; maps tone AvatarState to AvatarStateType.
+ * EDIT: Add new timeline field: handle here; update STATE_MAP if needed.
+ * RELATED: useAvatarMotions, @/hooks/tone, motions/emotions
+ */
+
 import { useCallback, useRef, useEffect } from 'react';
 import type { MotionTimeline, EmotionCode, AvatarState } from '@/hooks/tone';
-import type { AvatarStateType } from './useAvatarState';
+import type { AvatarStateType } from '../config/types';
 
 export interface UseEmotionSchedulerOptions {
   playEmotion: (code: EmotionCode) => void;

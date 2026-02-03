@@ -1,0 +1,1 @@
+export { HomeMainContent } from './HomeMainContent';

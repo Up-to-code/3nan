@@ -1,6 +1,13 @@
+/**
+ * WHY: Parent facade for Avatar ref methods (transitions, emotions, setState).
+ * HOW: Wraps avatarRef.current calls with error handling.
+ * EDIT: Add new ref method: add here; ensure AvatarRef exposes it.
+ * RELATED: Avatar.tsx, useAvatarMotions, config/types (AvatarRef)
+ */
+
 import { useCallback, type RefObject } from 'react';
-import type { AvatarRef } from '../Avatar';
-import type { AvatarStateType } from './useAvatarState';
+import type { AvatarRef } from '../config/types';
+import type { AvatarStateType } from '../config/types';
 import type { MotionTimeline } from '@/hooks/tone';
 
 
