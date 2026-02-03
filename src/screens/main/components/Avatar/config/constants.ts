@@ -1,3 +1,10 @@
+/**
+ * WHY: Central config for Avatar sizes, durations, springs, and layout helpers.
+ * HOW: Exports constants and pure functions used by motions, hooks, and Avatar.
+ * EDIT: Change sizes/durations here; motion logic stays in motions/.
+ * RELATED: avatarRoles.ts, useAvatarLoopMotions, useAvatarState, transitions
+ */
+
 export const OPENING_SIZE = 24;
 
 // Reference size for viewBox/line coords (design units)

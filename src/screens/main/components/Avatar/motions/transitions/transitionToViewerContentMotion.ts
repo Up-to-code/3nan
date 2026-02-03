@@ -1,9 +1,16 @@
+/**
+ * WHY: One-time transition to viewer content (circle shrinks, moves up).
+ * HOW: Springs size/translateY/scale to target; optional onComplete.
+ * EDIT: Change target size in config/constants; spring in same file.
+ * RELATED: useTransitionMotions, transitionToAssistantViewMotion, config/constants
+ */
+
 import { withSpring, runOnJS, ReduceMotion } from 'react-native-reanimated';
 import type { MotionContext } from '../types';
 import {
   VIEWER_CONTENT_CIRCLE_MIN,
   APPLE_SPRING_SNAPPY,
-} from '../../Avatar.constants';
+} from '../../config/constants';
 
 const SPRING_SNAPPY = { ...APPLE_SPRING_SNAPPY, reduceMotion: ReduceMotion.System };
 

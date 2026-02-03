@@ -1,18 +1,27 @@
+/**
+ * WHY: Barrel for all Avatar motions (breathing, emotions, states, transitions).
+ * HOW: Re-exports from subfolders for hooks and Avatar.
+ * EDIT: Add new motion folder: add exports here.
+ * RELATED: useAvatarMotions, useAvatarLoopMotions, useAvatarState, useTransitionMotions
+ */
+
 export {
   loopBreathingMotion,
-  loopCalmMotion,
-  loopHappyMotion,
-  loopSadMotion,
   type BreathingSizeRange,
-} from './avatar';
+} from './breathing';
 export {
   EMOTION_REGISTRY,
-  loopListeningMotion,
-  loopSpeakingMotion,
-  loopSilentMotion,
+  loopHappyMotion,
+  loopSadMotion,
+  loopCalmMotion,
   type EmotionCode,
   type EmotionMotion,
 } from './emotions';
+export {
+  loopListeningMotion,
+  loopSpeakingMotion,
+  loopSilentMotion,
+} from './states';
 export {
   transitionToViewerContentMotion,
   transitionToAssistantViewMotion,

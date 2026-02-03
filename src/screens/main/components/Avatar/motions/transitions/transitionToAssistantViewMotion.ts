@@ -1,3 +1,10 @@
+/**
+ * WHY: One-time transition back to assistant view (circle grows, breathing starts).
+ * HOW: Springs size/translateY; starts breathing loop on scale.
+ * EDIT: Change timing in config/constants; motion logic here.
+ * RELATED: useTransitionMotions, transitionToViewerContentMotion, config/constants
+ */
+
 import {
   withSpring,
   withTiming,
@@ -12,7 +19,7 @@ import {
   BREATH_SCALE_MIN,
   BREATH_SCALE_MAX,
   BREATH_PHASE_DURATION,
-} from '../../Avatar.constants';
+} from '../../config/constants';
 
 const SPRING_SNAPPY = { ...APPLE_SPRING_SNAPPY, reduceMotion: ReduceMotion.System };
 const TIMING = {
