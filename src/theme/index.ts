@@ -57,17 +57,6 @@ export const typography = {
   },
 } as const;
 
-// Profile component tokens
-export const profile = {
-  avatarSize: 52,
-  minHeight: 96,
-  badge: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-    borderRadius: borderRadius.sm,
-  },
-} as const;
-
 // Button sizes based on screen category
 export const buttonSizes = {
   sm: {

@@ -1,24 +1,16 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { View, StyleSheet, LayoutChangeEvent, Text } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme';
-import { useIsRTL } from '@/hooks';
-import { Avatar, type AvatarRef } from './components/Avatar';
-import { useAvatarInteraction } from './components/Avatar/hooks';
+import { useDebugPerformance } from '@/hooks';
+import { Avatar, type AvatarRef, AvatarAnimationTestPanel } from './components/Avatar';
 import { ViewerContentLayout } from './components/ViewerContentLayout';
-import { MenuScreen } from './components/MenuScreen';
-import { useMenuSwipe } from './hooks';
 
 export function HomeScreen() {
   const avatarRef = useRef<AvatarRef>(null);
   const insets = useSafeAreaInsets();
-  const { isRTL } = useIsRTL();
+  const { fps, isLow, memory } = useDebugPerformance();
   const [isViewerContent, setIsViewerContent] = useState(false);
-  const { panGesture, closePanGesture, mainAnimatedStyle, close, edgeWidth, isMenuOpen } =
-    useMenuSwipe(isRTL);
-  useAvatarInteraction({ avatarRef, setIsViewerContent });
   const [avatarParentCenterY, setAvatarParentCenterY] = useState<number | undefined>();
   const [contentOpacity, setContentOpacity] = useState<
     import('react-native-reanimated').SharedValue<number> | null
@@ -49,51 +41,96 @@ export function HomeScreen() {
     if (!isViewerContent) hasStartedTransition.current = false;
   }, [isViewerContent, avatarParentCenterY]);
 
-  const edgeStripStyle = isRTL
-    ? [styles.edgeStrip, { right: 0, width: edgeWidth, top: 0, bottom: 0 }]
-    : [styles.edgeStrip, { left: 0, width: edgeWidth, top: 0, bottom: 0 }];
+  const handleTransitionToViewerContent = useCallback(() => {
+    try {
+      setIsViewerContent(true);
+    } catch (err) {
+      console.error('[HomeScreen] transitionToViewerContent failed:', err);
+    }
+  }, []);
 
-  const closeStripStyle = isRTL
-    ? [styles.edgeStrip, { left: 0, width: edgeWidth, top: 0, bottom: 0 }]
-    : [styles.edgeStrip, { right: 0, width: edgeWidth, top: 0, bottom: 0 }];
+  const handleTransitionToAssistantView = useCallback(() => {
+    try {
+      avatarRef.current?.transitionToAssistantView(() => {
+        try {
+          setIsViewerContent(false);
+        } catch (_) {
+          console.error('[HomeScreen] onComplete callback failed');
+        }
+      });
+    } catch (err) {
+      console.error('[HomeScreen] transitionToAssistantView failed:', err);
+      setIsViewerContent(false);
+    }
+  }, []);
 
-  const leftHintStyle = { width: edgeWidth };
-  const rightHintStyle = { width: edgeWidth };
+  const handlePlayHappy = useCallback(() => {
+    avatarRef.current?.playHappy();
+  }, []);
+
+  const handlePlaySad = useCallback(() => {
+    avatarRef.current?.playSad();
+  }, []);
+
+  const handlePlayCalm = useCallback(() => {
+    avatarRef.current?.playCalm();
+  }, []);
+
+  const handleSetState = useCallback((state: 'listening' | 'speaking' | 'silent') => {
+    avatarRef.current?.setState(state);
+  }, []);
+
+  const handlePlayNeutral = useCallback(() => {
+    avatarRef.current?.playEmotion('n');
+  }, []);
+
+  const handleScheduleDemo = useCallback(() => {
+    avatarRef.current?.scheduleFromTimeline({
+      states: [
+        { st: 'listen', f: 0, to: 1500 },
+        { st: 'speak', f: 1500, to: 4000 },
+      ],
+      emotions: [
+        { e: 'n', f: 0, to: 1500 },
+        { e: 'h', f: 1500, to: 3000 },
+        { e: 'c', f: 3000, to: 4000 },
+      ],
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.wrapper}>
-        <View style={[StyleSheet.absoluteFill, styles.menuLayer]}>
-          <MenuScreen onClose={close} />
-          <View style={[styles.swipeHint, rightHintStyle, styles.swipeHintRight]} pointerEvents="none" />
-        </View>
-        <Animated.View style={[StyleSheet.absoluteFill, styles.mainLayer, mainAnimatedStyle]}>
-          <View style={styles.mainArea}>
-            {isViewerContent && contentOpacity && (
-              <ViewerContentLayout contentOpacity={contentOpacity} />
-            )}
-            <View style={styles.avatarContainer} onLayout={handleAvatarContainerLayout}>
-              <Avatar
-                ref={avatarRef}
-                parentCenterY={avatarParentCenterY}
-                onContentOpacityReady={handleContentOpacityReady}
-              />
-            </View>
-          </View>
-        </Animated.View>
-        <GestureDetector gesture={panGesture}>
-          <View style={edgeStripStyle} />
-        </GestureDetector>
-        <View
-          style={[closeStripStyle, styles.closeStripOverlay]}
-          pointerEvents={isMenuOpen ? 'auto' : 'none'}
-        >
-          <GestureDetector gesture={closePanGesture}>
-            <View style={StyleSheet.absoluteFill} />
-          </GestureDetector>
-        </View>
-        <View style={[styles.swipeHint, leftHintStyle, styles.swipeHintLeft]} pointerEvents="none" />
+      <View
+        style={[styles.fpsOverlay, { top: insets.top }]}
+        pointerEvents="none"
+      >
+        <Text style={[styles.fpsText, isLow && styles.fpsTextLow]}>
+          {fps} FPS
+          {memory.available ? ` | ${memory.usedMB}MB` : ' | RAM: N/A'}
+        </Text>
       </View>
+      <View style={styles.mainArea}>
+        {isViewerContent && contentOpacity && (
+          <ViewerContentLayout contentOpacity={contentOpacity} />
+        )}
+        <View style={styles.avatarContainer} onLayout={handleAvatarContainerLayout}>
+          <Avatar
+            ref={avatarRef}
+            parentCenterY={avatarParentCenterY}
+            onContentOpacityReady={handleContentOpacityReady}
+          />
+        </View>
+      </View>
+      <AvatarAnimationTestPanel
+        onTransitionToViewerContent={handleTransitionToViewerContent}
+        onTransitionToAssistantView={handleTransitionToAssistantView}
+        onPlayHappy={handlePlayHappy}
+        onPlaySad={handlePlaySad}
+        onPlayCalm={handlePlayCalm}
+        onPlayNeutral={handlePlayNeutral}
+        onSetState={handleSetState}
+        onScheduleDemo={handleScheduleDemo}
+      />
     </SafeAreaView>
   );
 }
@@ -103,37 +140,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  wrapper: {
-    flex: 1,
-  },
-  menuLayer: {
-    zIndex: 0,
-    backgroundColor: colors.background,
-  },
-  mainLayer: {
-    zIndex: 1,
-    backgroundColor: colors.background,
-  },
-  edgeStrip: {
-    position: 'absolute',
-    zIndex: 2,
-  },
-  closeStripOverlay: {
-    zIndex: 2,
-  },
-  swipeHint: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.03)',
-    zIndex: 1,
-  },
-  swipeHintLeft: {
-    left: 0,
-  },
-  swipeHintRight: {
-    right: 0,
-  },
   mainArea: {
     flex: 1,
   },
@@ -141,5 +147,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  fpsOverlay: {
+    position: 'absolute',
+    right: 12,
+    zIndex: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 4,
+  },
+  fpsText: {
+    color: '#7fff7f',
+    fontSize: 12,
+    fontVariant: ['tabular-nums'],
+  },
+  fpsTextLow: {
+    color: '#ff7f7f',
   },
 });

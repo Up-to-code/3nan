@@ -78,7 +78,6 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
     playCalm,
     playEmotion,
     setState,
-    currentState,
     scheduleFromTimeline,
   } = useAvatarMotions({ parentCenterY });
 
@@ -87,10 +86,6 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
   useEffect(() => {
     onContentOpacityReady?.(contentOpacity);
   }, [contentOpacity, onContentOpacityReady]);
-
-  useEffect(() => {
-    setLineShown(currentState === 'silent');
-  }, [currentState]);
 
   useImperativeHandle(
     ref,
@@ -133,8 +128,8 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
     }
     lastDoubleTapTime.current = now;
     trigger('light');
-    setState(currentState === 'silent' ? 'speaking' : 'silent');
-  }, [trigger, setState, currentState]);
+    setLineShown((prev) => !prev);
+  }, [trigger]);
 
   const doubleTapGesture = useMemo(
     () =>
@@ -145,19 +140,13 @@ const AvatarComponent = forwardRef<AvatarRef, AvatarProps>(function Avatar(
     [onDoubleTap]
   );
 
-  const handleTouchEnd = useCallback(() => {
-    if (currentState !== 'silent') {
-      resumeBreathing();
-    }
-  }, [currentState, resumeBreathing]);
-
   const touchGesture = useMemo(
     () =>
       Gesture.Pan()
         .minPointers(1)
         .onStart(() => runOnJS(pauseBreathing)())
-        .onFinalize(() => runOnJS(handleTouchEnd)()),
-    [pauseBreathing, handleTouchEnd]
+        .onFinalize(() => runOnJS(resumeBreathing)()),
+    [pauseBreathing, resumeBreathing]
   );
 
   const composedGesture = useMemo(

@@ -1,11 +1,9 @@
-import { withTiming, withSequence, withRepeat, Easing, ReduceMotion } from 'react-native-reanimated';
+import { withSpring, withSequence, withRepeat, ReduceMotion } from 'react-native-reanimated';
 import type { MotionContext } from '../types';
 import {
   ASSISTANT_VIEW_SIZE,
   BREATH_SIZE,
-  BREATH_SCALE_MIN,
-  BREATH_SCALE_MAX,
-  BREATH_PHASE_DURATION,
+  APPLE_SPRING_BREATHING,
 } from '../../Avatar.constants';
 
 export interface BreathingSizeRange {
@@ -18,23 +16,18 @@ const DEFAULT_RANGE: BreathingSizeRange = {
   max: BREATH_SIZE,
 };
 
-const TIMING = {
-  duration: BREATH_PHASE_DURATION,
-  easing: Easing.linear,
-  reduceMotion: ReduceMotion.System,
-} as const;
+const SPRING = { ...APPLE_SPRING_BREATHING, reduceMotion: ReduceMotion.System };
 
 export function loopBreathingMotion(
   ctx: MotionContext,
   range: BreathingSizeRange = DEFAULT_RANGE
 ): void {
-  const { size, scale } = ctx;
-  const baseSize = range.min;
-  size.value = baseSize;
-  scale.value = withRepeat(
+  const { size } = ctx;
+  const { min, max } = range;
+  size.value = withRepeat(
     withSequence(
-      withTiming(BREATH_SCALE_MAX, TIMING),
-      withTiming(BREATH_SCALE_MIN, TIMING)
+      withSpring(max, SPRING),
+      withSpring(min, SPRING)
     ),
     -1
   );
