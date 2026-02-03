@@ -3,6 +3,8 @@ import { borderRadius } from '@/theme';
 
 const PADDING = 4;
 
+export const HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
+
 export const styles = StyleSheet.create({
   trigger: {
     padding: PADDING,
@@ -15,12 +17,6 @@ export const styles = StyleSheet.create({
   },
   triggerFallback: {
     backgroundColor: 'rgba(255,255,255,0.9)',
-  },
-  hitSlop: {
-    top: 8,
-    bottom: 8,
-    left: 8,
-    right: 8,
   },
   pressable: {
     alignItems: 'center',

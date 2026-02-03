@@ -55,6 +55,10 @@
     "arabic": "العربية",
     "english": "English"
   },
+  "subscription": {
+    "free": "Free",
+    "pro": "Pro"
+  },
   "common": {
     "loading": "Loading…",
     "errorSomethingWrong": "Something went wrong",
