@@ -8,7 +8,6 @@ import { styles } from './ProfileView.styles';
 
 const DUMMY_PROFILE = {
   name: 'User Name',
-  email: 'user@example.com',
   subscription: 'free' as SubscriptionVariant,
 };
 
@@ -37,9 +36,6 @@ export function ProfileView() {
         <View style={styles.dataView}>
           <Text style={styles.name} numberOfLines={1}>
             {DUMMY_PROFILE.name}
-          </Text>
-          <Text style={styles.email} numberOfLines={1}>
-            {DUMMY_PROFILE.email}
           </Text>
           <SubscriptionBadge variant={DUMMY_PROFILE.subscription} />
         </View>

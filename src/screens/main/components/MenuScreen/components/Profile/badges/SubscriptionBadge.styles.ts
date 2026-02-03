@@ -5,12 +5,11 @@ export const styles = StyleSheet.create({
   container: {
     alignSelf: 'flex-start',
     ...profile.badge,
-    backgroundColor: colors.surface,
-    marginTop: 4,
+    backgroundColor: colors.border,
   },
   text: {
     fontSize: typography.sizes.xs,
     fontFamily: fonts.medium,
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
 });

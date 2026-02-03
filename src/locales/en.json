@@ -59,6 +59,13 @@
     "free": "Free",
     "pro": "Pro"
   },
+  "menu": {
+    "services": "Services",
+    "chats": "Chats",
+    "contact": "Contact",
+    "orders": "Orders",
+    "chatHistory": "Chat history"
+  },
   "common": {
     "loading": "Loading…",
     "errorSomethingWrong": "Something went wrong",

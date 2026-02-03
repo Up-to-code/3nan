@@ -6,30 +6,26 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  header: {
+  contentArea: {
+    flex: 1,
+  },
+  profileFooter: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingTop: spacing.md,
+    backgroundColor: colors.background,
+  },
+  header: {
+    paddingHorizontal: '10%',
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
   },
   title: {
-    fontSize: typography.sizes.xl,
+    fontSize: typography.sizes.md,
     fontFamily: fonts.semibold,
     color: colors.text.primary,
   },
-  closeButton: {
+  backButton: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  closeCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  closeCircleFallback: {
-    backgroundColor: colors.surface,
   },
 });

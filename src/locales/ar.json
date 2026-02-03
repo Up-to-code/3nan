@@ -59,6 +59,13 @@
     "free": "مجاني",
     "pro": "برو"
   },
+  "menu": {
+    "services": "الخدمات",
+    "chats": "المحادثات",
+    "contact": "التواصل",
+    "orders": "الطلبات",
+    "chatHistory": "سجل المحادثات"
+  },
   "common": {
     "loading": "جاري التحميل…",
     "errorSomethingWrong": "حدث خطأ ما",

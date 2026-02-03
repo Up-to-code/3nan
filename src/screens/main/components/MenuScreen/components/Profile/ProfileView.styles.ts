@@ -1,42 +1,40 @@
 import { StyleSheet } from 'react-native';
-import { colors, fonts, spacing, typography, profile } from '@/theme';
+import { borderRadius, colors, fonts, spacing, typography, profile } from '@/theme';
 
 export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: profile.minHeight,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.sm,
-    marginBottom: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    minHeight: profile.menuMinHeight,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.xl,
+    backgroundColor: colors.surface,
+    overflow: 'hidden',
   },
   row: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   avatarPlaceholder: {
-    width: profile.avatarSize,
-    height: profile.avatarSize,
-    borderRadius: profile.avatarSize / 2,
-    backgroundColor: colors.surface,
+    width: profile.menuAvatarSize,
+    height: profile.menuAvatarSize,
+    borderRadius: profile.menuAvatarSize / 2,
+    backgroundColor: colors.border,
   },
   dataView: {
     flex: 1,
-    gap: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   name: {
-    fontSize: typography.sizes.md,
+    flex: 1,
+    fontSize: typography.sizes.sm,
     fontFamily: fonts.semibold,
     color: colors.text.primary,
-  },
-  email: {
-    fontSize: typography.sizes.sm,
-    fontFamily: fonts.regular,
-    color: colors.text.secondary,
   },
   chevron: {
     marginStart: spacing.sm,

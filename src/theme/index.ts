@@ -61,6 +61,8 @@ export const typography = {
 export const profile = {
   avatarSize: 52,
   minHeight: 96,
+  menuAvatarSize: 40,
+  menuMinHeight: 64,
   badge: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,

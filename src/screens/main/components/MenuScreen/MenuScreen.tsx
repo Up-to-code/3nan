@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing } from '@/theme';
 import { useHapticFeedback, useLayoutDirection } from '@/hooks';
-import { MenuItemList } from './components';
+import { MenuItemList, ProfileView } from './components';
 import { styles } from './MenuScreen.styles';
 
 interface MenuScreenProps {
@@ -11,28 +12,29 @@ interface MenuScreenProps {
 }
 
 export function MenuScreen({ onClose }: MenuScreenProps) {
+  const insets = useSafeAreaInsets();
   const { trigger } = useHapticFeedback();
-  const { rowDirection, alignStart } = useLayoutDirection();
+  const { rowDirection, isRTL } = useLayoutDirection();
 
   const handleClose = () => {
     trigger('selection');
     requestAnimationFrame(() => onClose());
   };
 
-  const closeButton = (
+  const backButton = (
     <Pressable
       onPress={handleClose}
       accessibilityRole="button"
-      accessibilityLabel="Close menu"
+      accessibilityLabel="Back"
       hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-      style={styles.closeButton}
+      style={styles.backButton}
     >
-      <Ionicons name="close" size={24} color={colors.text.primary} />
+      <Ionicons
+        name={isRTL ? 'chevron-back' : 'chevron-forward'}
+        size={24}
+        color={colors.text.primary}
+      />
     </Pressable>
-  );
-
-  const closeButtonWrapped = (
-    <View style={[styles.closeCircle, styles.closeCircleFallback]}>{closeButton}</View>
   );
 
   return (
@@ -41,17 +43,21 @@ export function MenuScreen({ onClose }: MenuScreenProps) {
         style={[
           styles.header,
           {
-            paddingTop: spacing.lg,
             flexDirection: rowDirection,
             justifyContent: 'space-between',
             alignItems: 'center',
           },
         ]}
       >
-        <View style={{ alignItems: alignStart }}>{closeButtonWrapped}</View>
-        <Text style={styles.title}>Menu</Text>
+        <Text style={styles.title}>Circle.AI</Text>
+        {backButton}
       </View>
-      <MenuItemList />
+      <View style={styles.contentArea}>
+        <MenuItemList />
+      </View>
+      <View style={[styles.profileFooter, { paddingBottom: insets.bottom || spacing.md }]}>
+        <ProfileView />
+      </View>
     </View>
   );
 }

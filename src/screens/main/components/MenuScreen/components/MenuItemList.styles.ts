@@ -1,10 +1,30 @@
 import { StyleSheet } from 'react-native';
-import { colors, fonts, spacing, typography } from '@/theme';
+import { borderRadius, colors, fonts, spacing, typography } from '@/theme';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
+  },
+  groupCard: {
+    borderRadius: borderRadius.xl,
+    backgroundColor: colors.surface,
+    overflow: 'hidden',
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.md,
+  },
+  sectionHeader: {
+    fontSize: typography.sizes.xs,
+    fontFamily: fonts.medium,
+    color: colors.text.secondary,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    marginTop: spacing.md,
+  },
+  sectionHeaderFirst: {
+    marginTop: spacing.sm,
   },
   item: {
     flexDirection: 'row',
