@@ -83,3 +83,7 @@ git remote remove origin
 git remote add origin https://github.com/Up-to-code/3nan.git
 git push -u origin main
 ```
+
+## Project links
+
+[Source](https://github.com/Up-to-code/3nan) · [Issues](https://github.com/Up-to-code/3nan/issues) · [Public project directory](https://github.com/qentrah/.github/blob/main/profile/PROJECTS.md)
